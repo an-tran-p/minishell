@@ -6,13 +6,13 @@
 #    By: atran <atran@student.hive.fi>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/06 17:50:04 by atran             #+#    #+#              #
-#    Updated: 2025/05/05 19:39:36 by atran            ###   ########.fr        #
+#    Updated: 2025/05/06 16:58:35 by atran            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS = minishell.c pipe.c pipe_utils.c check.c
+SRCS = minishell.c pipe.c pipe_utils.c check.c env.c echo_pwd.c
 
 OBJS = $(SRCS:%.c=%.o)
 
