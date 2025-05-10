@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/05/06 16:58:14 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/10 14:06:28 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,30 @@
 #  define PATH_MAX 4096
 # endif
 
-char	*ft_strnstr(const char *big, const char *little, size_t len);
-char	**ft_split(char const *s, char c);
-char	*ft_strjoin(char const *s1, char const *s2);
-void	ft_free_strarr(char **str_arr);
-char	*find_path(char *cmd, char **envp);
-int		ft_printf(const char *str, ...);
-char	replace_space_in_cmd(char *argv);
-void	put_back_space(char **cmd, char c);
-void	ft_put_err(char *err_msg, char *para);
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}					t_env;
 
-int		ft_echo(char **argv);
-int		ft_pwd(void);
+int					ft_echo(char **argv);
+int					ft_pwd(void);
+int					ft_cd(char **argv, char **env);
 
-char	*ft_getenv(char **env, char *key);
-char	**copy_envp(char **envp);
+char				*ft_getenv(char **env, char *key);
+char				**copy_envp(char **envp);
+int					ft_setenv(char **env, char *key, char *n_value);
+
+char				*ft_strnstr(const char *big, const char *little,
+						size_t len);
+char				**ft_split(char const *s, char c);
+char				*ft_strjoin(char const *s1, char const *s2);
+void				ft_free_strarr(char **str_arr);
+char				*find_path(char *cmd, char **envp);
+int					ft_printf(const char *str, ...);
+char				replace_space_in_cmd(char *argv);
+void				put_back_space(char **cmd, char c);
+void				ft_put_err(char *err_msg, char *para);
 
 #endif

@@ -6,15 +6,34 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/05/06 16:57:42 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/10 13:06:19 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_setenv(char **env, char *key, char *n_value)
+int	ft_setenv(char **env, char *key, char *n_value)
 {
+	char	*new_entry;
+	int		i;
 
+	new_entry = ft_strjoin(key, n_value);
+	if (!new_entry)
+		return (-1);
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], key, ft_strlen(key)) == 0)
+		{
+			ft_free_str(&env[i]);
+			env[i] = new_entry;
+			return (0);
+		}
+		i++;
+	}
+	env[i] = new_entry;
+	env[i + 1] = NULL;
+	return (0);
 }
 
 char	*ft_getenv(char **env, char *key)

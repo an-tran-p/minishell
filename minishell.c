@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/05/06 17:41:10 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/10 13:48:23 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,34 +20,6 @@ int	is_builtins(char *argv)
 		|| ft_strncmp(argv, "exit", 5) == 0)
 		return (0);
 	return (1);
-}
-
-int	ft_cd(char **argv, char **env)
-{
-	char	*path;
-	char	cwd[PATH_MAX];
-	char	old_pwd[PATH_MAX];
-
-	if (!argv[1])
-		path = ft_getenv(env, "HOME");
-	else if (ft_strncmp(argv[1], "-", 2) == 0)
-		path = ft_getenv(env, "OLDPWD");
-	else if (ft_strncmp(argv[1], "..", 3) == 0)
-	{
-		getcwd(cwd, PATH_MAX);
-		*(ft_strrchr(cwd, '/')) = '\0';
-		path = cwd;
-	}
-	else
-		path = argv[1];
-	getcwd(old_pwd, PATH_MAX);
-	if (chdir(path) != 0)
-	{
-		ft_printf("cd: %s", argv[1]),
-		perror(": ");
-		return (1);
-	}
-	return (0);
 }
 
 int	execute_builtin(char **argv, char **env)
