@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/05/11 19:33:40 by atran            ###   ########.fr       */
+/*   Created: 2024/10/29 16:59:36 by atran             #+#    #+#             */
+/*   Updated: 2025/05/11 19:25:15 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int	ft_pwd(void)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	char	cwd[PATH_MAX];
+	size_t	i;
 
-	if (getcwd(cwd, PATH_MAX))
+	i = 0;
+	while (s1[i] != '\0' || s2[i] != '\0')
 	{
-		ft_printf("%s\n", cwd);
-		return (0);
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
 	}
-	else
-		return (1);
+	return (0);
 }

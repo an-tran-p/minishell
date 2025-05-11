@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 10:54:08 by atran             #+#    #+#             */
-/*   Updated: 2025/02/20 18:11:51 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/11 19:25:43 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ void				ft_free_str(char **str);
 void				ft_free_strarr(char **str_arr);
 void				ft_free_2d_strarr(char ***str_arr);
 char				*get_next_line(int fd);
+int					ft_strcmp(const char *s1, const char *s2);
 
 #endif

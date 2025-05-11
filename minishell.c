@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/05/10 13:48:23 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/11 19:55:00 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	execute_builtin(char **argv, char **env)
 		exit = ft_pwd();
 	if (ft_strncmp(argv[0], "cd", 3) == 0)
 		exit = ft_cd(argv, env);
+	if (ft_strncmp(argv[0], "export", 7) == 0)
+		exit = ft_export(argv, env);
 	return (exit);
 }
 
@@ -41,7 +43,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc < 0)
 		return (-1);
-	env = copy_envp(envp);
+	env = copy_env(envp);
 	if (!env)
 		return (-1);
 	if (is_builtins(argv[1]) == 0)
