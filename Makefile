@@ -6,14 +6,14 @@
 #    By: atran <atran@student.hive.fi>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/06 17:50:04 by atran             #+#    #+#              #
-#    Updated: 2025/05/11 19:56:50 by atran            ###   ########.fr        #
+#    Updated: 2025/05/11 21:29:26 by atran            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRCS = minishell.c get_set_env.c builtins/pwd.c builtins/echo.c builtins/cd.c \
-		builtins/export.c
+		builtins/export.c builtins/export_print.c
 
 OBJS = $(SRCS:%.c=%.o)
 

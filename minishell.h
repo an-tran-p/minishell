@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/05/11 19:55:54 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/11 21:29:11 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 int		ft_echo(char **argv);
 int		ft_pwd(void);
 int		ft_cd(char **argv, char **env);
+int		export_print(char **env);
 int		ft_export(char **argv, char **env);
 
 char	*ft_getenv(char **env, char *key);
