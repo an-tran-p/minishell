@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/05/11 21:30:24 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/11 21:47:35 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,10 @@ int	check_valid_id(char *entry)
 
 int	ft_export(char **argv, char **env)
 {
-	int i;
-	char *eq;
-	char *key;
+	int		i;
+	char	*eq;
+	char	*key;
+	char	*value;
 
 	if (!argv[1])
 		return (export_print(env));
@@ -53,9 +54,19 @@ int	ft_export(char **argv, char **env)
 				eq = ft_strchr(argv[i], '=');
 				if (eq)
 				{
-					ft_setenv();
+					key = ft_memcpy(key, argv[i], eq + 1 - argv[i]);
+					value = eq + 1;
 				}
+				else if (!eq)
+				{
+					key = argv[i];
+					value = NULL;
+				}
+				ft_printf("key is %s\n", key);
+				ft_printf("value is %s\n", value);
+				ft_setenv(env, key, value);
 			}
+			i++;
 		}
 	}
 	return (0);

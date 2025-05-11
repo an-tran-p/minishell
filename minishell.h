@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/05/11 21:29:11 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/11 22:01:47 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int		ft_export(char **argv, char **env);
 char	*ft_getenv(char **env, char *key);
 char	**copy_env(char **envp);
 int		ft_setenv(char **env, char *key, char *n_value);
+char	**realloc_env(char **env, int add);
 
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	**ft_split(char const *s, char c);

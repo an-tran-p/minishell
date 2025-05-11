@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_set_env.c                                      :+:      :+:    :+:   */
+/*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/05/11 19:31:55 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/11 22:03:41 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,16 @@ int	ft_setenv(char **env, char *key, char *n_value)
 	char	*new_entry;
 	int		i;
 
-	new_entry = ft_strjoin(key, n_value);
+	if (!n_value)
+		new_entry = ft_strdup(key);
+	else if (n_value)
+		new_entry = ft_strjoin(key, n_value);
 	if (!new_entry)
 		return (-1);
 	i = 0;
 	while (env[i])
 	{
-		if (ft_strncmp(env[i], key, ft_strlen(key)) == 0)
+		if (ft_strncmp(env[i], key, ft_strlen(key)) == 0 && ft_strchr(key, '='))
 		{
 			ft_free_str(&env[i]);
 			env[i] = new_entry;
@@ -31,6 +34,7 @@ int	ft_setenv(char **env, char *key, char *n_value)
 		}
 		i++;
 	}
+	env = realloc_env(env, 1);
 	env[i] = new_entry;
 	env[i + 1] = NULL;
 	return (0);
@@ -79,4 +83,24 @@ char	**copy_env(char **envp)
 	}
 	env[i] = NULL;
 	return (env);
+}
+
+char	**realloc_env(char **env, int add)
+{
+	int		i;
+	char	**new_env;
+
+	i = 0;
+	while (env[i])
+		i++;
+	new_env = malloc(sizeof(char *) * (i + 1 + add));
+	i = 0;
+	while (env[i])
+	{
+		new_env[i] = env[i];
+		i++;
+	}
+	new_env[i] = NULL;
+	free(env);
+	return (new_env);
 }
