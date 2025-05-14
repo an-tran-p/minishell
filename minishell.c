@@ -22,7 +22,7 @@ int	is_builtins(char *argv)
 	return (1);
 }
 
-int	execute_builtin(char **argv, char **env)
+int	execute_builtin(char **argv, char ***env)
 {
 	int	exit;
 
@@ -31,7 +31,7 @@ int	execute_builtin(char **argv, char **env)
 	if (ft_strncmp(argv[0], "pwd", 4) == 0)
 		exit = ft_pwd();
 	if (ft_strncmp(argv[0], "cd", 3) == 0)
-		exit = ft_cd(argv, env);
+		exit = ft_cd(argv, *env);
 	if (ft_strncmp(argv[0], "export", 7) == 0)
 		exit = ft_export(argv, env);
 	return (exit);
@@ -47,7 +47,7 @@ int	main(int argc, char **argv, char **envp)
 	if (!env)
 		return (-1);
 	if (is_builtins(argv[1]) == 0)
-		execute_builtin(&argv[1], env);
+		execute_builtin(&argv[1], &env);
 	ft_free_strarr(env);
 	return (0);
 }

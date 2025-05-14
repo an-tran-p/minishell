@@ -30,11 +30,11 @@ int		ft_echo(char **argv);
 int		ft_pwd(void);
 int		ft_cd(char **argv, char **env);
 int		export_print(char **env);
-int		ft_export(char **argv, char **env);
+int	    ft_export(char **argv, char ***env);
 
 char	*ft_getenv(char **env, char *key);
 char	**copy_env(char **envp);
-int		ft_setenv(char **env, char *key, char *n_value);
+int		ft_setenv(char ***env, char *key, char *n_value);
 char	**realloc_env(char **env, int add);
 
 char	*ft_strnstr(const char *big, const char *little, size_t len);

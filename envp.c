@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	ft_setenv(char **env, char *key, char *n_value)
+int	ft_setenv(char ***env, char *key, char *n_value)
 {
 	char	*new_entry;
 	int		i;
@@ -22,21 +22,20 @@ int	ft_setenv(char **env, char *key, char *n_value)
 	else if (n_value)
 		new_entry = ft_strjoin(key, n_value);
 	if (!new_entry)
-		return (-1);
+		return (1);
 	i = 0;
-	while (env[i])
+	while ((*env)[i])
 	{
-		if (ft_strncmp(env[i], key, ft_strlen(key)) == 0 && ft_strchr(key, '='))
+		if (ft_strncmp((*env)[i], key, ft_strlen(key)) == 0 && ft_strchr(key, '='))
 		{
-			ft_free_str(&env[i]);
-			env[i] = new_entry;
+			ft_free_str(&(*env)[i]);
+			(*env)[i] = new_entry;
 			return (0);
 		}
 		i++;
 	}
-	env = realloc_env(env, 1);
-	env[i] = new_entry;
-	env[i + 1] = NULL;
+	*env = realloc_env(*env, 1);
+	(*env)[i] = new_entry;
 	return (0);
 }
 
@@ -101,6 +100,8 @@ char	**realloc_env(char **env, int add)
 		i++;
 	}
 	new_env[i] = NULL;
+	new_env[i + 1] = NULL;
 	free(env);
-	return (new_env);
+	env = new_env;
+	return (env);
 }

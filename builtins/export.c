@@ -18,15 +18,15 @@ int	check_valid_id(char *entry)
 
 	if (ft_isalpha(entry[0]) == 0 && entry[0] != '_')
 	{
-		ft_printf("minishell: export: \'%s\': not a valid identifier", entry);
+		ft_printf("minishell: export: \'%s\': not a valid identifier\n", entry);
 		return (1);
 	}
 	i = 1;
 	while (entry[i] && entry[i] != '=')
 	{
-		if (ft_isalnum(entry[i] == 0 && entry[i] != '_'))
+		if (ft_isalnum(entry[i]) == 0 && entry[i] != '_')
 		{
-			ft_printf("minishell: export: \'%s\': not a valid identifier",
+			ft_printf("minishell: export: \'%s\': not a valid identifier\n",
 				entry);
 			return (1);
 		}
@@ -35,36 +35,48 @@ int	check_valid_id(char *entry)
 	return (0);
 }
 
-int	ft_export(char **argv, char **env)
+int	ft_export(char **argv, char ***env)
 {
 	int		i;
 	char	*eq;
+	char	**entry;
 	char	*key;
-	char	*value;
 
 	if (!argv[1])
-		return (export_print(env));
+		return (export_print(*env));
 	else
 	{
 		i = 1;
 		while (argv[i])
 		{
+			ft_printf("argv[%d] is %s\n", i, argv[i]);
 			if (check_valid_id(argv[i]) == 0)
 			{
 				eq = ft_strchr(argv[i], '=');
 				if (eq)
 				{
-					key = ft_memcpy(key, argv[i], eq + 1 - argv[i]);
-					value = eq + 1;
+					entry = ft_split(argv[i], '=');
+					if (!entry)
+						return (1);
+					key = ft_strjoin(entry[0], "=");
+					if (!key)
+						return (ft_free_strarr(entry), 1);
+					free(entry[0]);
+					entry[0] = key;
 				}
 				else if (!eq)
 				{
-					key = argv[i];
-					value = NULL;
+					entry = malloc(sizeof(char*) * 2);
+					if (!entry)
+						return (1);
+					entry[0] = ft_strdup(argv[i]);
+					entry[1] = NULL;
 				}
-				ft_printf("key is %s\n", key);
-				ft_printf("value is %s\n", value);
-				ft_setenv(env, key, value);
+				ft_printf("key is %s\n", entry[0]);
+				ft_printf("value is %s\n", entry[1]);
+				ft_setenv(env, entry[0], entry[1]);
+				export_print(*env);
+				ft_free_strarr(entry);
 			}
 			i++;
 		}

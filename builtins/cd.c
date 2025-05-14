@@ -31,8 +31,8 @@ int	ft_cd(char **argv, char **env)
 		perror("");
 		return (1);
 	}
-	ft_setenv(env, "OLDPWD=", old_pwd);
+	ft_setenv(&env, "OLDPWD=", old_pwd);
 	getcwd(cur_pwd, PATH_MAX);
-	ft_setenv(env, "PWD=", cur_pwd);
+	ft_setenv(&env, "PWD=", cur_pwd);
 	return (0);
 }
