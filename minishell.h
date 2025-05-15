@@ -29,6 +29,7 @@
 int		ft_echo(char **argv);
 int		ft_pwd(void);
 int		ft_cd(char **argv, char **env);
+int	    check_valid_id(char *entry, char c);
 int		export_print(char **env);
 int	    ft_export(char **argv, char ***env);
 int	    ft_env(char **argv, char **env);
