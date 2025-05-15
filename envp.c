@@ -32,6 +32,8 @@ int	ft_setenv(char ***env, char *key, char *n_value)
 			(*env)[i] = new_entry;
 			return (0);
 		}
+		else if (ft_strncmp((*env)[i], key, ft_strchr((*env)[i], '=') - (*env)[i]) == 0 && !ft_strchr(key, '='))
+			return (0);
 		i++;
 	}
 	*env = realloc_env(*env, 1);
