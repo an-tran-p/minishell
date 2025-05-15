@@ -12,13 +12,14 @@
 
 #include "../minishell.h"
 
-int	check_valid_id(char *entry)
+int	check_valid_id(char *entry, char c)
 {
 	int	i;
 
 	if (ft_isalpha(entry[0]) == 0 && entry[0] != '_')
 	{
-		ft_printf("minishell: export: \'%s\': not a valid identifier\n", entry);
+		if (c == 'e')
+			ft_printf("minishell: export: \'%s\': not a valid identifier\n", entry);
 		return (1);
 	}
 	i = 1;
@@ -26,7 +27,8 @@ int	check_valid_id(char *entry)
 	{
 		if (ft_isalnum(entry[i]) == 0 && entry[i] != '_')
 		{
-			ft_printf("minishell: export: \'%s\': not a valid identifier\n",
+			if (c == 'e')
+				ft_printf("minishell: export: \'%s\': not a valid identifier\n",
 				entry);
 			return (1);
 		}
@@ -50,7 +52,7 @@ int	ft_export(char **argv, char ***env)
 		while (argv[i])
 		{
 			ft_printf("argv[%d] is %s\n", i, argv[i]);
-			if (check_valid_id(argv[i]) == 0)
+			if (check_valid_id(argv[i], 'e') == 0)
 			{
 				eq = ft_strchr(argv[i], '=');
 				if (eq)
