@@ -72,10 +72,7 @@ int	ft_export(char **argv, char ***env)
 					entry[0] = ft_strdup(argv[i]);
 					entry[1] = NULL;
 				}
-				ft_printf("key is %s\n", entry[0]);
-				ft_printf("value is %s\n", entry[1]);
 				ft_setenv(env, entry[0], entry[1]);
-				export_print(*env);
 				ft_free_strarr(entry);
 			}
 			i++;

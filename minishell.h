@@ -31,6 +31,7 @@ int		ft_pwd(void);
 int		ft_cd(char **argv, char **env);
 int		export_print(char **env);
 int	    ft_export(char **argv, char ***env);
+int	    ft_env(char **argv, char **env);
 
 char	*ft_getenv(char **env, char *key);
 char	**copy_env(char **envp);

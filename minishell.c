@@ -34,6 +34,8 @@ int	execute_builtin(char **argv, char ***env)
 		exit = ft_cd(argv, *env);
 	if (ft_strncmp(argv[0], "export", 7) == 0)
 		exit = ft_export(argv, env);
+	if (ft_strncmp(argv[0], "env", 4) == 0)
+		exit = ft_env(argv, *env);
 	return (exit);
 }
 
