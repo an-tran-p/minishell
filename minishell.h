@@ -32,6 +32,8 @@ int		ft_cd(char **argv, char **env);
 int		ft_export(char **argv, char ***env);
 int		ft_env(char **argv, char **env);
 int		check_valid_id(char *entry, char c);
+int	ft_unset(char **argv, char ***env);
+int	export_print(char **env);
 
 char	*ft_getenv(char **env, char *key);
 char	**copy_env(char **envp);

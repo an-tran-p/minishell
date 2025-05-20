@@ -18,7 +18,7 @@ int	remove_env_key(char ***env, char *key)
 	int	k_len;
 
 	i = 0;
-	k_len = ft_strlen(key);
+	k_len = ft_strlen(key) - 1;
 	while ((*env)[i])
 	{
 		if (ft_strncmp((*env)[i], key, k_len) == 0 && (*env)[i][k_len
@@ -30,7 +30,7 @@ int	remove_env_key(char ***env, char *key)
 				(*env)[i] = (*env)[i + 1];
 				i++;
 			}
-			*env = realloc_env(*env, -1);
+			(*env)[i] = NULL;
 			if (!(*env))
 				return (1);
 			return (0);
@@ -40,7 +40,7 @@ int	remove_env_key(char ***env, char *key)
 	return (0);
 }
 
-int	ft_unset(char ***env, char **argv)
+int	ft_unset(char **argv, char ***env)
 {
 	int	i;
 	int	exit;

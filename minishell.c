@@ -37,7 +37,7 @@ int	execute_builtin(char **argv, char ***env)
 	if (ft_strncmp(argv[0], "env", 4) == 0)
 		exit = ft_env(argv, *env);
 	if (ft_strncmp(argv[0], "unset", 6) == 0)
-		exit = ft_env(argv, *env);
+		exit = ft_unset(argv, env);
 	return (exit);
 }
 
@@ -52,6 +52,7 @@ int	main(int argc, char **argv, char **envp)
 		return (-1);
 	if (is_builtins(argv[1]) == 0)
 		execute_builtin(&argv[1], &env);
+	export_print(env);
 	ft_free_strarr(env);
 	return (0);
 }

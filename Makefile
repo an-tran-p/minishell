@@ -13,7 +13,7 @@
 NAME = minishell
 
 SRCS = minishell.c envp.c builtins/pwd.c builtins/echo.c builtins/cd.c \
-		builtins/export.c builtins/env.c
+		builtins/export.c builtins/env.c builtins/unset.c
 
 OBJS = $(SRCS:%.c=%.o)
 

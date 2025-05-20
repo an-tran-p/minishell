@@ -38,7 +38,7 @@ int	ft_setenv(char ***env, char *k, char *n_value)
 	}
 	*env = realloc_env(*env, 1);
 	if (!(*env))
-		return (ft_free_str(new_entry), 1);
+		return (ft_free_str(&new_entry), 1);
 	(*env)[i] = new_entry;
 	return (0);
 }
