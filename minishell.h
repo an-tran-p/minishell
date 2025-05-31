@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/05/20 17:44:53 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/30 21:44:18 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,28 +26,41 @@
 #  define PATH_MAX 4096
 # endif
 
-int		ft_echo(char **argv);
-int		ft_pwd(void);
-int		ft_cd(char **argv, char **env);
-int		ft_export(char **argv, char ***env);
-int		ft_env(char **argv, char **env);
-int		check_valid_id(char *entry, char c);
-int		ft_unset(char **argv, char ***env);
-int		export_print(char **env);
+typedef struct s_pipe_step
+{
+	char		**cmd;
+	char		*infile;
+	char		*heredoc_deli;
+	char		*outfile;
+	int			append;
+	int			pipe;
+	t_pipe_step	*next;
+}				t_pipe_step;
 
-char	*ft_getenv(char **env, char *key);
-char	**copy_env(char **envp);
-int		ft_setenv(char ***env, char *key, char *n_value);
-char	**realloc_env(char **env, int add);
+int				is_builtins(char *argv);
+int				execute_builtin(char **argv, char ***env);
+int				ft_echo(char **argv);
+int				ft_pwd(void);
+int				ft_cd(char **argv, char **env);
+int				ft_export(char **argv, char ***env);
+int				ft_env(char **argv, char **env);
+int				check_valid_id(char *entry, char c);
+int				ft_unset(char **argv, char ***env);
+int				export_print(char **env);
 
-char	*ft_strnstr(const char *big, const char *little, size_t len);
-char	**ft_split(char const *s, char c);
-char	*ft_strjoin(char const *s1, char const *s2);
-void	ft_free_strarr(char **str_arr);
-char	*find_path(char *cmd, char **envp);
-int		ft_printf(const char *str, ...);
-char	replace_space_in_cmd(char *argv);
-void	put_back_space(char **cmd, char c);
-void	ft_put_err(char *err_msg, char *para);
+char			*ft_getenv(char **env, char *key);
+char			**copy_env(char **envp);
+int				ft_setenv(char ***env, char *key, char *n_value);
+char			**realloc_env(char **env, int add);
+
+char			*ft_strnstr(const char *big, const char *little, size_t len);
+char			**ft_split(char const *s, char c);
+char			*ft_strjoin(char const *s1, char const *s2);
+void			ft_free_strarr(char **str_arr);
+char			*find_path(char *cmd, char **envp);
+int				ft_printf(const char *str, ...);
+char			replace_space_in_cmd(char *argv);
+void			put_back_space(char **cmd, char c);
+void			ft_put_err(char *err_msg, char *para);
 
 #endif

@@ -6,53 +6,81 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/05/19 23:00:38 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/30 23:03:25 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "test_cases.c"
 
-int	is_builtins(char *argv)
+int	create_processes(t_pipe_step *input, int step, char **env)
 {
-	if (ft_strncmp(argv, "echo", 5) == 0 || ft_strncmp(argv, "cd", 3) == 0
-		|| ft_strncmp(argv, "pwd", 4) == 0 || ft_strncmp(argv, "export", 7) == 0
-		|| ft_strncmp(argv, "unset", 6) == 0 || ft_strncmp(argv, "env", 4) == 0
-		|| ft_strncmp(argv, "exit", 5) == 0)
-		return (0);
-	return (1);
+	int		fds[2];
+	pid_t	pid1;
+	pid_t	pid2;
+	int		status;
+
+	pid1 = fork();
+	if (pid1 < 0)
+	{
+		perror("Failed creating process\n");
+		return (1);
+	}
+	if (pid1 == 0)
+		execute_child1_process(fds, argv[1], argv[2], envp);
+	pid2 = fork();
+	if (pid2 < 0)
+	{
+		perror("Failed creating process\n");
+		return (1);
+	}
+	if (pid2 == 0)
+		execute_child2_process(fds, argv[4], argv[3], envp);
+	close(fds[0]);
+	close(fds[1]);
+	waitpid(pid1, &status, 0);
+	waitpid(pid2, &status, 0);
+	return (WEXITSTATUS(status));
 }
 
-int	execute_builtin(char **argv, char ***env)
+int	count_steps(t_pipe_step *input)
 {
-	int	exit;
+	int			step;
+	t_pipe_step	*dup;
 
-	if (ft_strncmp(argv[0], "echo", 5) == 0)
-		exit = ft_echo(argv);
-	if (ft_strncmp(argv[0], "pwd", 4) == 0)
-		exit = ft_pwd();
-	if (ft_strncmp(argv[0], "cd", 3) == 0)
-		exit = ft_cd(argv, *env);
-	if (ft_strncmp(argv[0], "export", 7) == 0)
-		exit = ft_export(argv, env);
-	if (ft_strncmp(argv[0], "env", 4) == 0)
-		exit = ft_env(argv, *env);
-	if (ft_strncmp(argv[0], "unset", 6) == 0)
-		exit = ft_unset(argv, env);
-	return (exit);
+	step = 0;
+	dup = input;
+	while (dup)
+	{
+		if (dup->pipe == 1)
+			step++;
+		dup = dup->next;
+	}
+	return (step);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	**env;
+	char		**env;
+	char		*line;
+	t_pipe_step	*input;
+	int			step;
+	int			status;
 
-	if (argc < 0)
-		return (-1);
+	(void)argc;
 	env = copy_env(envp);
 	if (!env)
 		return (-1);
-	if (is_builtins(argv[1]) == 0)
+	/* if (is_builtins(argv[1]) == 0)
+	{
 		execute_builtin(&argv[1], &env);
-	export_print(env);
+		export_print(env);
+	} */
+	input = test_1();
+	step = count_steps(input);
+	status = 0;
+	if (step > 0)
+		status = create_processes(input, step, env);
 	ft_free_strarr(env);
-	return (0);
+	return (status);
 }
