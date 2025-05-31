@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/05/30 21:44:18 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/31 23:10:19 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,41 +26,55 @@
 #  define PATH_MAX 4096
 # endif
 
-typedef struct s_pipe_step
+typedef enum e_token_type
 {
-	char		**cmd;
-	char		*infile;
-	char		*heredoc_deli;
-	char		*outfile;
-	int			append;
-	int			pipe;
-	t_pipe_step	*next;
-}				t_pipe_step;
+	RD_INFILE,
+	RD_HDQUOTE,
+	RD_HEREDOC,
+	RD_OUTFILE,
+	RD_APPEND,
+}					t_etype;
 
-int				is_builtins(char *argv);
-int				execute_builtin(char **argv, char ***env);
-int				ft_echo(char **argv);
-int				ft_pwd(void);
-int				ft_cd(char **argv, char **env);
-int				ft_export(char **argv, char ***env);
-int				ft_env(char **argv, char **env);
-int				check_valid_id(char *entry, char c);
-int				ft_unset(char **argv, char ***env);
-int				export_print(char **env);
+typedef struct s_rd
+{
+	t_etype			type;
+	char			*s;
+	struct s_rd		*next;
+}					t_rd;
 
-char			*ft_getenv(char **env, char *key);
-char			**copy_env(char **envp);
-int				ft_setenv(char ***env, char *key, char *n_value);
-char			**realloc_env(char **env, int add);
+typedef struct s_step
+{
+	int				pipe;
+	t_rd			*rd;
+	char			**cmd;
+	struct s_step	*next;
+}					t_step;
 
-char			*ft_strnstr(const char *big, const char *little, size_t len);
-char			**ft_split(char const *s, char c);
-char			*ft_strjoin(char const *s1, char const *s2);
-void			ft_free_strarr(char **str_arr);
-char			*find_path(char *cmd, char **envp);
-int				ft_printf(const char *str, ...);
-char			replace_space_in_cmd(char *argv);
-void			put_back_space(char **cmd, char c);
-void			ft_put_err(char *err_msg, char *para);
+int					is_builtins(char *argv);
+int					execute_builtin(char **argv, char ***env);
+int					ft_echo(char **argv);
+int					ft_pwd(void);
+int					ft_cd(char **argv, char **env);
+int					ft_export(char **argv, char ***env);
+int					ft_env(char **argv, char **env);
+int					check_valid_id(char *entry, char c);
+int					ft_unset(char **argv, char ***env);
+int					export_print(char **env);
+
+char				*ft_getenv(char **env, char *key);
+char				**copy_env(char **envp);
+int					ft_setenv(char ***env, char *key, char *n_value);
+char				**realloc_env(char **env, int add);
+
+char				*ft_strnstr(const char *big, const char *little,
+						size_t len);
+char				**ft_split(char const *s, char c);
+char				*ft_strjoin(char const *s1, char const *s2);
+void				ft_free_strarr(char **str_arr);
+char				*find_path(char *cmd, char **envp);
+int					ft_printf(const char *str, ...);
+char				replace_space_in_cmd(char *argv);
+void				put_back_space(char **cmd, char c);
+void				ft_put_err(char *err_msg, char *para);
 
 #endif

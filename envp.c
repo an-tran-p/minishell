@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/05/20 17:47:45 by atran            ###   ########.fr       */
+/*   Updated: 2025/05/31 23:16:54 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*get_new_entry(char *k, char *n_value)
 
 	if (!n_value)
 		new_entry = ft_strdup(k);
-	else if (n_value)
+	else
 		new_entry = ft_strjoin(k, n_value);
 	if (!new_entry)
 		return (NULL);
