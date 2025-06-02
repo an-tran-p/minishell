@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/05/31 23:15:26 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/02 23:10:51 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,30 @@ void	execute(char **cmd, char **env)
 {
 	char	*path;
 
+	if (!cmd || !cmd[0])
+		exit(0);
 	path = find_path(cmd[0], env);
 	if (!path)
 	{
 		ft_put_err("command not found: ", cmd[0]);
-		ft_free_strarr(cmd);
 		exit(127);
 	}
 	if (execve(path, cmd, env) == -1)
 	{
-		ft_free_strarr(cmd);
 		free(path);
 		perror("Execution fails\n");
 		exit(127);
 	}
-	ft_free_strarr(cmd);
 	free(path);
-	exit(0);
 }
 
 void	execute_child_process(int *fds, int prev_fd, t_step *step, char **env)
 {
-	int	fd_in;
-	int	fd_out;
+	int		fd_in;
+	int		fd_out;
+	t_rd	*rd;
 
+	rd = step->rd;
 	if (prev_fd != -1)
 	{
 		dup2(prev_fd, STDIN_FILENO);
@@ -52,34 +52,34 @@ void	execute_child_process(int *fds, int prev_fd, t_step *step, char **env)
 		close(fds[0]);
 		close(fds[1]);
 	}
-	while (step->rd)
+	while (rd)
 	{
-		if (step->rd->type == RD_INFILE)
+		if (rd->type == RD_INFILE)
 		{
-			fd_in = open(step->rd->s, O_RDONLY);
+			fd_in = open(rd->s, O_RDONLY);
 			if (fd_in == -1)
 			{
-				ft_printf("%s: %s\n", strerror(errno), step->rd->s);
+				ft_printf("%s: %s\n", strerror(errno), rd->s);
 				exit(1);
 			}
 			dup2(fd_in, STDIN_FILENO);
 			close(fd_in);
 		}
-		if (step->rd->type == RD_OUTFILE || step->rd->type == RD_APPEND)
+		if (rd->type == RD_OUTFILE || rd->type == RD_APPEND)
 		{
-			if (step->rd->type == RD_OUTFILE)
-				fd_out = open(step->rd->s, O_RDWR | O_CREAT | O_TRUNC, 0777);
-			else if (step->rd->type == RD_APPEND)
-				fd_out = open(step->rd->s, O_RDWR | O_CREAT | O_APPEND, 0777);
+			if (rd->type == RD_OUTFILE)
+				fd_out = open(rd->s, O_RDWR | O_CREAT | O_TRUNC, 0777);
+			else if (rd->type == RD_APPEND)
+				fd_out = open(rd->s, O_WRONLY | O_CREAT | O_APPEND, 0777);
 			if (fd_out == -1)
 			{
-				ft_printf("%s: %s\n", strerror(errno), step->rd->s);
+				ft_printf("%s: %s\n", strerror(errno), rd->s);
 				exit(1);
 			}
 			dup2(fd_out, STDOUT_FILENO);
 			close(fd_out);
 		}
-		step->rd = step->rd->next;
+		rd = rd->next;
 	}
 	execute(step->cmd, env);
 }
@@ -106,13 +106,14 @@ int	create_processes(t_step *step, char **env)
 		if (pid == -1)
 			exit(1);
 		if (pid == 0)
-			execute_child_process(fds, prev_fd, step, env);
+			execute_child_process(fds, prev_fd, st, env);
 		else
 		{
 			pids[i] = pid;
+			ft_printf("I am in process %d\n", i);
 			if (prev_fd != -1)
 				close(prev_fd);
-			if (step->pipe)
+			if (st->pipe)
 			{
 				close(fds[1]);
 				prev_fd = fds[0];
@@ -120,7 +121,7 @@ int	create_processes(t_step *step, char **env)
 			else
 				prev_fd = -1;
 		}
-		step = step->next;
+		st = st->next;
 		i++;
 	}
 	j = 0;
@@ -134,9 +135,9 @@ int	create_processes(t_step *step, char **env)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	**env;
 	t_step	*step;
 	int		status;
+	char	**env;
 
 	(void)argc;
 	(void)argv;
@@ -151,9 +152,10 @@ int	main(int argc, char **argv, char **envp)
 	step = test_1();
 	status = 0;
 	if (step->pipe == 1)
-		status = create_processes(step, env);
+		status = create_processes(step, envp);
 	/* else if (step->pipe == 0)
-		status = execute(step); */
+		status = execute(step->cmd, env); */
 	ft_free_strarr(env);
+	ft_free_step(step);
 	return (status);
 }

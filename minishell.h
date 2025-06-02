@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/05/31 23:10:19 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/02 21:18:34 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ char				*ft_strjoin(char const *s1, char const *s2);
 void				ft_free_strarr(char **str_arr);
 char				*find_path(char *cmd, char **envp);
 int					ft_printf(const char *str, ...);
-char				replace_space_in_cmd(char *argv);
-void				put_back_space(char **cmd, char c);
 void				ft_put_err(char *err_msg, char *para);
 
 #endif

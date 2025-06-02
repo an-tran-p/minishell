@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 16:25:59 by atran             #+#    #+#             */
-/*   Updated: 2025/05/05 17:04:09 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/02 23:00:35 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	*form_path(char **paths, char *cmd)
 	char	*path;
 
 	i = 0;
+	if (!paths || !cmd)
+		return (NULL);
 	while (paths[i])
 	{
 		top_path = ft_strjoin(paths[i], "/");
@@ -69,9 +71,13 @@ char	*find_path(char *cmd, char **envp)
 	char	*path;
 
 	i = 0;
-	while (ft_strnstr(envp[i], "PATH", 4) == 0)
+	while (envp[i] && ft_strnstr(envp[i], "PATH", 4) == 0)
 		i++;
+	if (!envp[i])
+		return (NULL);
 	paths = ft_split(envp[i] + 5, ':');
+	if (!paths)
+		return (NULL);
 	path = form_path(paths, cmd);
 	return (path);
 }
