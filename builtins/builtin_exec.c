@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/05/28 19:43:07 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/04 18:51:07 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	is_builtins(char *argv)
 		|| ft_strncmp(argv, "pwd", 4) == 0 || ft_strncmp(argv, "export", 7) == 0
 		|| ft_strncmp(argv, "unset", 6) == 0 || ft_strncmp(argv, "env", 4) == 0
 		|| ft_strncmp(argv, "exit", 5) == 0)
-		return (0);
-	return (1);
+		return (1);
+	return (0);
 }
 
 int	execute_builtin(char **argv, char ***env)

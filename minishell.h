@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/02 21:18:34 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/04 15:44:34 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,17 @@ typedef enum e_token_type
 	RD_APPEND,
 }					t_etype;
 
-typedef struct s_rd
+typedef struct s_token
 {
 	t_etype			type;
 	char			*s;
-	struct s_rd		*next;
-}					t_rd;
+	struct s_token	*next;
+}					t_token;
 
 typedef struct s_step
 {
 	int				pipe;
-	t_rd			*rd;
+	t_token			*rd;
 	char			**cmd;
 	struct s_step	*next;
 }					t_step;
