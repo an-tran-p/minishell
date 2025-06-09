@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/04 23:07:24 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/09 23:10:40 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,8 @@ t_step	*test_3(void)
 	return (n1);
 }
 
-// exmaple: export > test.txt | <test.txt grep "declare" | wc -l >> test.txt
+/* exmaple: export >a >test.txt | <test.txt grep hello | wc
+	-l >> test.txt */
 t_step	*test_4(void)
 {
 	t_step	*n1;
@@ -125,8 +126,8 @@ t_step	*test_4(void)
 		return (NULL);
 	}
 	// Duplicate cmd arrays properly
-	if (!(n1->cmd = dup_cmd((char *[]){"export", NULL}))
-		|| !(n2->cmd = dup_cmd((char *[]){"grep", "declare", NULL}))
+	if (!(n1->cmd = dup_cmd((char *[]){"echo", "hello", NULL}))
+		|| !(n2->cmd = dup_cmd((char *[]){"grep", "hello", NULL}))
 		|| !(n3->cmd = dup_cmd((char *[]){"wc", "-l", NULL})))
 	{
 		for (t_step *n = n1; n != NULL; n = n->next)
@@ -144,7 +145,8 @@ t_step	*test_4(void)
 		return (NULL);
 	}
 	// Setup redirections and pipes
-	n1->rd = create_rd(RD_OUTFILE, "test.txt");
+	n1->rd = create_rd(RD_OUTFILE, "a.txt");
+	n1->rd->next = create_rd(RD_OUTFILE, "test.txt");
 	n1->pipe = 1;
 	n1->next = n2;
 	n2->rd = create_rd(RD_INFILE, "test.txt");
@@ -153,6 +155,50 @@ t_step	*test_4(void)
 	n3->rd = create_rd(RD_APPEND, "test.txt");
 	n3->pipe = 0;
 	n3->next = NULL;
+	return (n1);
+}
+
+// example: cat <<eof >a <<abc >b <<def >c | wc -l
+t_step	*test_5(void)
+{
+	t_step	*n1;
+	t_step	*n2;
+
+	n1 = malloc(sizeof(t_step));
+	n2 = malloc(sizeof(t_step));
+	if (!n1 || !n2)
+	{
+		free(n1);
+		free(n2);
+		return (NULL);
+	}
+	if (!(n1->cmd = dup_cmd((char *[]){"cat", NULL}))
+		|| !(n2->cmd = dup_cmd((char *[]){"wc", "-l", NULL})))
+	{
+		for (t_step *n = n1; n != NULL; n = n->next)
+		{
+			if (n->cmd)
+			{
+				for (int i = 0; n->cmd[i]; i++)
+					free(n->cmd[i]);
+				free(n->cmd);
+			}
+		}
+		free(n1);
+		free(n2);
+		return (NULL);
+	}
+	n1->rd = create_rd(RD_HEREDOC, "eof");
+	n1->rd->next = create_rd(RD_OUTFILE, "a");
+	n1->rd->next->next = create_rd(RD_HEREDOC, "abc");
+	n1->rd->next->next->next = create_rd(RD_OUTFILE, "b");
+	n1->rd->next->next->next->next = create_rd(RD_HEREDOC, "def");
+	n1->rd->next->next->next->next->next = create_rd(RD_OUTFILE, "c");
+	n1->pipe = 1;
+	n1->next = n2;
+	n2->rd = create_rd(RD_INFILE, "c");
+	n2->pipe = 0;
+	n2->next = NULL;
 	return (n1);
 }
 

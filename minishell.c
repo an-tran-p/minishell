@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/04 23:27:57 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/09 23:22:57 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,62 +34,58 @@ void	execute(char **cmd, char **env)
 	free(path);
 }
 
-void	handle_rd(t_token *redirection)
+int	have_infile(t_token *redirection)
 {
-	int		fd_in;
-	int		fd_out;
 	t_token	*rd;
 
 	rd = redirection;
+	if (!rd)
+		return (0);
 	while (rd)
 	{
-		if (rd->type == RD_INFILE)
-		{
-			fd_in = open(rd->s, O_RDONLY);
-			if (fd_in == -1)
-			{
-				ft_printf("%s: %s\n", strerror(errno), rd->s);
-				exit(1);
-			}
-			dup2(fd_in, STDIN_FILENO);
-			close(fd_in);
-		}
-		if (rd->type == RD_OUTFILE || rd->type == RD_APPEND)
-		{
-			if (rd->type == RD_OUTFILE)
-				fd_out = open(rd->s, O_RDWR | O_CREAT | O_TRUNC, 0777);
-			else if (rd->type == RD_APPEND)
-				fd_out = open(rd->s, O_WRONLY | O_CREAT | O_APPEND, 0777);
-			if (fd_out == -1)
-			{
-				ft_printf("%s: %s\n", strerror(errno), rd->s);
-				exit(1);
-			}
-			dup2(fd_out, STDOUT_FILENO);
-			close(fd_out);
-		}
+		if (rd->type == RD_INFILE || rd->type == RD_HDQUOTE
+			|| rd->type == RD_HEREDOC)
+			return (1);
 		rd = rd->next;
 	}
+	return (0);
+}
+
+int	have_outfile(t_token *redirection)
+{
+	t_token	*rd;
+
+	rd = redirection;
+	if (!rd)
+		return (0);
+	while (rd)
+	{
+		if (rd->type == RD_OUTFILE || rd->type == RD_APPEND)
+			return (1);
+		rd = rd->next;
+	}
+	return (0);
 }
 
 void	execute_child_process(int *fds, int prev_fd, t_step *step, char **env)
 {
 	int	status;
 
+	if (step->rd)
+		handle_rd(step->rd);
 	if (prev_fd != -1)
 	{
-		dup2(prev_fd, STDIN_FILENO);
+		if (!have_infile(step->rd))
+			dup2(prev_fd, STDIN_FILENO);
 		close(prev_fd);
 	}
 	if (step->pipe)
 	{
-		dup2(fds[1], STDOUT_FILENO);
+		if (!have_outfile(step->rd))
+			dup2(fds[1], STDOUT_FILENO);
 		close(fds[0]);
 		close(fds[1]);
 	}
-	if (step->rd)
-		handle_rd(step->rd);
-	ft_printf("executing cmd %s\n", step->cmd[0]);
 	if (is_builtins(step->cmd[0]))
 	{
 		status = execute_builtin(step->cmd, &env);
@@ -97,7 +93,7 @@ void	execute_child_process(int *fds, int prev_fd, t_step *step, char **env)
 		ft_free_step(step);
 		exit(status);
 	}
-	else
+	else if (!is_builtins(step->cmd[0]))
 		execute(step->cmd, env);
 }
 
@@ -185,7 +181,7 @@ int	main(int argc, char **argv, char **envp)
 	env = copy_env(envp);
 	if (!env)
 		return (-1);
-	step = test_4();
+	step = test_5();
 	status = 0;
 	if (step->pipe == 1)
 		status = create_processes(step, env);

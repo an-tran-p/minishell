@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/04 15:44:34 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/09 23:25:27 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
+# include <readline/readline.h>
 # include <stdio.h>
 # include <string.h>
 # include <sys/wait.h>
@@ -66,13 +67,11 @@ char				**copy_env(char **envp);
 int					ft_setenv(char ***env, char *key, char *n_value);
 char				**realloc_env(char **env, int add);
 
-char				*ft_strnstr(const char *big, const char *little,
-						size_t len);
-char				**ft_split(char const *s, char c);
-char				*ft_strjoin(char const *s1, char const *s2);
-void				ft_free_strarr(char **str_arr);
+void				handle_heredoc(t_token *redirection);
+void				handle_rd(t_token *redirection);
 char				*find_path(char *cmd, char **envp);
-int					ft_printf(const char *str, ...);
 void				ft_put_err(char *err_msg, char *para);
+
+int					ft_printf(const char *str, ...);
 
 #endif
