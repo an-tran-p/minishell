@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/10 21:55:07 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/10 22:25:30 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,10 +139,10 @@ int	create_processes(t_step *step, char **env)
 	while (st)
 	{
 		if (st->pipe && pipe(fds) == -1)
-			exit(1);
+			return (1);
 		pid = fork();
 		if (pid == -1)
-			exit(1);
+			return (1);
 		if (pid == 0)
 			execute_child_process(fds, prev_fd, st, env);
 		pids[i] = pid;
@@ -155,8 +155,6 @@ int	create_processes(t_step *step, char **env)
 			close(fds[1]);
 			prev_fd = fds[0];
 		}
-		else if (!st->pipe)
-			prev_fd = -1;
 		st = st->next;
 		i++;
 	}

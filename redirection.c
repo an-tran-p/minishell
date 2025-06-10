@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/10 21:18:25 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/10 22:12:43 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ void	handle_infile(t_token *redirection)
 	int		inf_last;
 
 	rd = redirection;
+	if (!rd)
+		return ;
 	inf_num = count_infile(redirection);
 	inf_last = infile_last(redirection);
 	while (rd)
@@ -112,6 +114,8 @@ void	handle_rd(t_step *step)
 	t_token	*rd;
 
 	rd = step->rd;
+	if (!rd)
+		return ;
 	if (step->hd_fd > 0)
 	{
 		dup2(step->hd_fd, STDIN_FILENO);
