@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/09 23:22:41 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/10 21:18:25 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,14 @@ void	handle_infile(t_token *redirection)
 	}
 }
 
-void	handle_rd(t_token *redirection)
+void	handle_outfile(t_token *redirection)
 {
 	int		fd_out;
 	t_token	*rd;
 
 	rd = redirection;
-	handle_heredoc(redirection);
-	handle_infile(redirection);
+	if (!rd)
+		return ;
 	while (rd)
 	{
 		if (rd->type == RD_OUTFILE || rd->type == RD_APPEND)
@@ -105,4 +105,18 @@ void	handle_rd(t_token *redirection)
 		}
 		rd = rd->next;
 	}
+}
+
+void	handle_rd(t_step *step)
+{
+	t_token	*rd;
+
+	rd = step->rd;
+	if (step->hd_fd > 0)
+	{
+		dup2(step->hd_fd, STDIN_FILENO);
+		close(step->hd_fd);
+	}
+	handle_infile(step->rd);
+	handle_outfile(step->rd);
 }

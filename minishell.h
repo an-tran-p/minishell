@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/09 23:25:27 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/10 20:38:43 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_step
 {
 	int				pipe;
 	t_token			*rd;
+	int				hd_fd;
 	char			**cmd;
 	struct s_step	*next;
 }					t_step;
@@ -67,8 +68,8 @@ char				**copy_env(char **envp);
 int					ft_setenv(char ***env, char *key, char *n_value);
 char				**realloc_env(char **env, int add);
 
-void				handle_heredoc(t_token *redirection);
-void				handle_rd(t_token *redirection);
+void				handle_heredoc(t_step *step);
+void				handle_rd(t_step *step);
 char				*find_path(char *cmd, char **envp);
 void				ft_put_err(char *err_msg, char *para);
 

@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/09 23:22:07 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/10 21:37:23 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	last_heredoc(char *delimeter)
 	return (fd[0]);
 }
 
-void	handle_heredoc(t_token *redirection)
+int	heredoc_in_step(t_token *redirection)
 {
 	int		fd_in;
 	t_token	*rd;
@@ -90,6 +90,7 @@ void	handle_heredoc(t_token *redirection)
 
 	rd = redirection;
 	hd_num = count_hdoc(redirection);
+	fd_in = 0;
 	while (rd)
 	{
 		fprintf(stderr, "rd type is %d\n", rd->type);
@@ -101,12 +102,35 @@ void	handle_heredoc(t_token *redirection)
 			else if (hd_num == 0)
 			{
 				fd_in = last_heredoc(rd->s);
-				if (fd_in == -1)
-					exit(1);
-				dup2(fd_in, STDIN_FILENO);
-				close(fd_in);
+				return (fd_in);
 			}
 		}
 		rd = rd->next;
+	}
+	return (fd_in);
+}
+
+void	handle_heredoc(t_step *step)
+{
+	t_step	*st;
+
+	st = step;
+	if (!st)
+		return ;
+	while (st)
+	{
+		st->hd_fd = heredoc_in_step(st->rd);
+		if (st->hd_fd == -1)
+		{
+			st = step;
+			while (st)
+			{
+				if (st->hd_fd > 0)
+					close(st->hd_fd);
+				st = st->next;
+			}
+			return ;
+		}
+		st = st->next;
 	}
 }

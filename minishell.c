@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/09 23:22:57 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/10 21:55:07 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,21 +71,19 @@ void	execute_child_process(int *fds, int prev_fd, t_step *step, char **env)
 {
 	int	status;
 
-	if (step->rd)
-		handle_rd(step->rd);
+	if (prev_fd != -1 && !have_infile(step->rd) && step->hd_fd <= 0)
+		dup2(prev_fd, STDIN_FILENO);
+	if (step->pipe && !have_outfile(step->rd))
+		dup2(fds[1], STDOUT_FILENO);
 	if (prev_fd != -1)
-	{
-		if (!have_infile(step->rd))
-			dup2(prev_fd, STDIN_FILENO);
 		close(prev_fd);
-	}
 	if (step->pipe)
 	{
-		if (!have_outfile(step->rd))
-			dup2(fds[1], STDOUT_FILENO);
 		close(fds[0]);
 		close(fds[1]);
 	}
+	if (step->rd)
+		handle_rd(step);
 	if (is_builtins(step->cmd[0]))
 	{
 		status = execute_builtin(step->cmd, &env);
@@ -93,8 +91,7 @@ void	execute_child_process(int *fds, int prev_fd, t_step *step, char **env)
 		ft_free_step(step);
 		exit(status);
 	}
-	else if (!is_builtins(step->cmd[0]))
-		execute(step->cmd, env);
+	execute(step->cmd, env);
 }
 
 int	execute_single_cmd(t_step *step, char ***env)
@@ -113,7 +110,7 @@ int	execute_single_cmd(t_step *step, char ***env)
 		if (pid == 0)
 		{
 			if (step->rd)
-				handle_rd(step->rd);
+				handle_rd(step);
 			if (is_builtins(step->cmd[0]))
 				return (execute_builtin(step->cmd, env));
 			else if (is_builtins(step->cmd[0]) == 0)
@@ -151,12 +148,14 @@ int	create_processes(t_step *step, char **env)
 		pids[i] = pid;
 		if (prev_fd != -1)
 			close(prev_fd);
+		if (st->hd_fd > 0)
+			close(st->hd_fd);
 		if (st->pipe)
 		{
 			close(fds[1]);
 			prev_fd = fds[0];
 		}
-		else
+		else if (!st->pipe)
 			prev_fd = -1;
 		st = st->next;
 		i++;
@@ -183,6 +182,7 @@ int	main(int argc, char **argv, char **envp)
 		return (-1);
 	step = test_5();
 	status = 0;
+	handle_heredoc(step);
 	if (step->pipe == 1)
 		status = create_processes(step, env);
 	else if (step->pipe == 0)

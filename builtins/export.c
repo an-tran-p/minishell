@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/05/19 21:42:05 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/10 19:05:10 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ char	**get_entry(char *argv)
 		free(entry[0]);
 		entry[0] = key;
 	}
-	else if (!eq)
+	else
 	{
 		entry = malloc(sizeof(char *) * 2);
 		if (!entry)
