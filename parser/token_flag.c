@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_flag.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/11 19:22:09 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/11 23:33:35 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,15 @@ int	token_flag(t_token **head, t_token *cur, int rd)
 			err = token_env(&cur, &i, rd);
 			if (err == -1)
 				m_err_exit_token(head);
-/*
-			else if (err == 1)
-			{
-				err = synerr_rd(head, cur->s);
-				return (err);
-			}
-*/
+			/*
+						else if (err == 1)
+						{
+							err = synerr_rd(head, cur->s);
+							return (err);
+						}
+			*/
 		}
-		i ++;
+		i++;
 	}
 	return (err);
 }

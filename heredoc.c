@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/11 21:14:33 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/11 23:26:38 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	last_heredoc(t_token *rd)
 	return (fd[0]);
 }
 
-int	heredoc_in_step(t_token *redirection, t_del *del)
+int	heredoc_in_step(t_token *redirection)
 {
 	int		fd_in;
 	t_token	*rd;
@@ -104,7 +104,7 @@ int	heredoc_in_step(t_token *redirection, t_del *del)
 	return (fd_in);
 }
 
-void	handle_heredoc(t_step *step, t_del *del)
+void	handle_heredoc(t_step *step)
 {
 	t_step	*st;
 
@@ -113,7 +113,7 @@ void	handle_heredoc(t_step *step, t_del *del)
 		return ;
 	while (st)
 	{
-		st->hd_fd = heredoc_in_step(st->rd, del);
+		st->hd_fd = heredoc_in_step(st->rd);
 		if (st->hd_fd == -1)
 		{
 			st = step;

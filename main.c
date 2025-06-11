@@ -6,13 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/11 20:57:42 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/11 23:39:21 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	del_all(t_del *del, int i)
+/* void	del_all(t_del *del, int i)
 {
 	if (del)
 	{
@@ -21,8 +21,7 @@ void	del_all(t_del *del, int i)
 	}
 	if (i)
 		exit(EXIT_FAILURE);
-}
-
+} */
 void	readline_err(char *line, int status, char **env)
 {
 	// memory failure? or end program
@@ -46,11 +45,11 @@ int	shell_execution(t_step *step, char **env)
 	status = 0;
 	del.env = &env;
 	del.head = &step;
-	handle_heredoc(step, &del);
+	handle_heredoc(step);
 	if (step->pipe)
-		status = creat_processes(step, env);
+		status = create_processes(step, env);
 	else
-		status = execute_single_cmd(step, &env, &del);
+		status = execute_single_cmd(step, &env);
 	ft_free_strarr(env);
 	st_lstclear(&step);
 	return (status);
