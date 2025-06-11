@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 16:25:59 by atran             #+#    #+#             */
-/*   Updated: 2025/06/09 23:23:18 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/11 19:40:24 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	ft_put_err(char *err_msg, char *para)
 {
-	write(STDERR_FILENO, err_msg, strlen(err_msg));
 	write(STDERR_FILENO, para, strlen(para));
+	write(STDERR_FILENO, err_msg, strlen(err_msg));
 	write(STDERR_FILENO, "\n", 1);
 }
 

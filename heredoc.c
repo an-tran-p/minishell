@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/10 21:37:23 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/11 21:14:33 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	count_hdoc(t_token *redirection)
 			num++;
 		rd = rd->next;
 	}
-	fprintf(stderr, "I am counting %d heredocs\n", num);
 	return (num);
 }
 
@@ -35,15 +34,11 @@ void	heredoc_to_skip(char *delimeter)
 {
 	char	*line;
 
-	fprintf(stderr, "this is heredoc to skip\n");
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
-		{
-			write(1, "\n", 1);
 			break ;
-		}
 		if (ft_strcmp(line, delimeter) == 0)
 		{
 			free(line);
@@ -53,26 +48,25 @@ void	heredoc_to_skip(char *delimeter)
 	}
 }
 
-int	last_heredoc(char *delimeter)
+int	last_heredoc(t_token *rd)
 {
 	int		fd[2];
 	char	*line;
 
 	if (pipe(fd) == -1)
 		return (-1);
-	fprintf(stderr, "I have reached the last heredoc\n");
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
+		if (!line || ft_strcmp(line, rd->s) == 0)
 		{
-			write(1, "\n", 1);
+			ft_free_str(&line);
 			break ;
 		}
-		if (ft_strcmp(line, delimeter) == 0)
+		if (rd->type == RD_HEREDOC)
 		{
-			free(line);
-			break ;
+			if (heredoc_expand(&line))
+				break ;
 		}
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
@@ -82,7 +76,7 @@ int	last_heredoc(char *delimeter)
 	return (fd[0]);
 }
 
-int	heredoc_in_step(t_token *redirection)
+int	heredoc_in_step(t_token *redirection, t_del *del)
 {
 	int		fd_in;
 	t_token	*rd;
@@ -93,7 +87,6 @@ int	heredoc_in_step(t_token *redirection)
 	fd_in = 0;
 	while (rd)
 	{
-		fprintf(stderr, "rd type is %d\n", rd->type);
 		if (rd->type == RD_HDQUOTE || rd->type == RD_HEREDOC)
 		{
 			hd_num--;
@@ -101,7 +94,8 @@ int	heredoc_in_step(t_token *redirection)
 				heredoc_to_skip(rd->s);
 			else if (hd_num == 0)
 			{
-				fd_in = last_heredoc(rd->s);
+				fd_in = last_heredoc(rd);
+				fprintf(stderr, "fd of this heredoc is %d\n", fd_in);
 				return (fd_in);
 			}
 		}
@@ -110,7 +104,7 @@ int	heredoc_in_step(t_token *redirection)
 	return (fd_in);
 }
 
-void	handle_heredoc(t_step *step)
+void	handle_heredoc(t_step *step, t_del *del)
 {
 	t_step	*st;
 
@@ -119,13 +113,13 @@ void	handle_heredoc(t_step *step)
 		return ;
 	while (st)
 	{
-		st->hd_fd = heredoc_in_step(st->rd);
+		st->hd_fd = heredoc_in_step(st->rd, del);
 		if (st->hd_fd == -1)
 		{
 			st = step;
 			while (st)
 			{
-				if (st->hd_fd > 0)
+				if (st->hd_fd != -1)
 					close(st->hd_fd);
 				st = st->next;
 			}

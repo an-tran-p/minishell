@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/10 20:38:43 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/11 20:55:55 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,12 @@ typedef struct s_step
 	struct s_step	*next;
 }					t_step;
 
+typedef struct s_del
+{
+	struct s_step	**head;
+	char			***env;
+}					t_del;
+
 int					is_builtins(char *argv);
 int					execute_builtin(char **argv, char ***env);
 int					ft_echo(char **argv);
@@ -68,11 +74,12 @@ char				**copy_env(char **envp);
 int					ft_setenv(char ***env, char *key, char *n_value);
 char				**realloc_env(char **env, int add);
 
-void				handle_heredoc(t_step *step);
+void				handle_heredoc(t_step *step, t_del *del);
 void				handle_rd(t_step *step);
 char				*find_path(char *cmd, char **envp);
 void				ft_put_err(char *err_msg, char *para);
 
 int					ft_printf(const char *str, ...);
+void				del_all(t_del *del, int i);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/10 22:12:43 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/11 19:21:36 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ void	handle_infile(t_token *redirection)
 	int		inf_last;
 
 	rd = redirection;
-	if (!rd)
-		return ;
 	inf_num = count_infile(redirection);
 	inf_last = infile_last(redirection);
 	while (rd)
@@ -70,7 +68,7 @@ void	handle_infile(t_token *redirection)
 			fd_in = open(rd->s, O_RDONLY);
 			if (fd_in == -1)
 			{
-				ft_printf("%s: %s\n", strerror(errno), rd->s);
+				ft_printf("minishell: %s: %s\n", strerror(errno), rd->s);
 				exit(1);
 			}
 			else if (inf_num == 0 && inf_last == 1)
@@ -112,15 +110,24 @@ void	handle_outfile(t_token *redirection)
 void	handle_rd(t_step *step)
 {
 	t_token	*rd;
+	t_step	*st;
 
 	rd = step->rd;
 	if (!rd)
 		return ;
-	if (step->hd_fd > 0)
+	if (step->hd_fd != -1)
 	{
+		fprintf(stderr, "I am closing heredoc %d\n", step->hd_fd);
 		dup2(step->hd_fd, STDIN_FILENO);
 		close(step->hd_fd);
 	}
 	handle_infile(step->rd);
 	handle_outfile(step->rd);
+	st = step;
+	while (st)
+	{
+		if (st->hd_fd != -1)
+			close(st->hd_fd);
+		st = st->next;
+	}
 }

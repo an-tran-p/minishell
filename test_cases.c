@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/10 22:27:39 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/11 19:55:50 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,19 +105,19 @@ t_step	*test_1(void)
 		return (NULL);
 	}
 	n[0]->rd = create_rd(RD_APPEND, "test.txt");
-	n[0]->hd_fd = 0;
+	n[0]->hd_fd = -1;
 	n[0]->pipe = 1;
 	n[0]->next = n[1];
 	n[1]->rd = NULL;
-	n[1]->hd_fd = 0;
+	n[1]->hd_fd = -1;
 	n[1]->pipe = 1;
 	n[1]->next = n[2];
 	n[2]->rd = NULL;
-	n[2]->hd_fd = 0;
+	n[2]->hd_fd = -1;
 	n[2]->pipe = 1;
 	n[2]->next = n[3];
 	n[3]->rd = NULL;
-	n[3]->hd_fd = 0;
+	n[3]->hd_fd = -1;
 	n[3]->pipe = 0;
 	n[3]->next = NULL;
 	return (n[0]);
@@ -130,10 +130,10 @@ t_step	*test_2(void)
 	n = malloc(sizeof(t_step));
 	if (!n)
 		return (NULL);
-	if (!(n->cmd = dup_cmd((char *[]){"echo", "Test", NULL})))
+	if (!(n->cmd = dup_cmd((char *[]){"wc", "-l", "test_cases.c", NULL})))
 		return (free(n), NULL);
-	n->rd = create_rd(RD_APPEND, "test.txt");
-	n->hd_fd = 0;
+	n->rd = NULL;
+	n->hd_fd = -1;
 	n->pipe = 0;
 	n->next = NULL;
 	return (n);
@@ -149,7 +149,7 @@ t_step	*test_3(void)
 	if (!(n->cmd = dup_cmd((char *[]){"export", NULL})))
 		return (free(n), NULL);
 	n->rd = NULL;
-	n->hd_fd = 0;
+	n->hd_fd = -1;
 	n->pipe = 0;
 	n->next = NULL;
 	return (n);
@@ -174,11 +174,11 @@ t_step	*test_4(void)
 		return (NULL);
 	}
 	n[0]->rd = NULL;
-	n[0]->hd_fd = 0;
+	n[0]->hd_fd = -1;
 	n[0]->pipe = 1;
 	n[0]->next = n[1];
 	n[1]->rd = create_rd(RD_APPEND, "test.txt");
-	n[1]->hd_fd = 0;
+	n[1]->hd_fd = -1;
 	n[1]->pipe = 0;
 	n[1]->next = NULL;
 	return (n[0]);
@@ -198,7 +198,8 @@ t_step	*test_5(void)
 	}
 	if (!(n[0]->cmd = dup_cmd((char *[]){"cat", NULL}))
 		|| !(n[1]->cmd = dup_cmd((char *[]){"cat", NULL}))
-		|| !(n[2]->cmd = dup_cmd((char *[]){"wc", "-l", NULL})))
+		|| !(n[2]->cmd = dup_cmd((char *[]){"wcds", "-l", "test_cases.c",
+				NULL})))
 	{
 		free_steps_on_failure(n, 3);
 		return (NULL);
@@ -210,15 +211,15 @@ t_step	*test_5(void)
 	n[0]->rd = rd_append(n[0]->rd, create_rd(RD_OUTFILE, "b"));
 	n[0]->rd = rd_append(n[0]->rd, create_rd(RD_HDQUOTE, "def"));
 	n[0]->rd = rd_append(n[0]->rd, create_rd(RD_OUTFILE, "c"));
-	n[0]->hd_fd = 0;
+	n[0]->hd_fd = -1;
 	n[0]->pipe = 1;
 	n[0]->next = n[1];
 	n[1]->rd = rd_append(NULL, create_rd(RD_HDQUOTE, "an"));
-	n[1]->hd_fd = 0;
+	n[1]->hd_fd = -1;
 	n[1]->pipe = 1;
 	n[1]->next = n[2];
-	n[2]->rd = create_rd(RD_INFILE, "test.txt");
-	n[2]->hd_fd = 0;
+	n[2]->rd = NULL;
+	n[2]->hd_fd = -1;
 	n[2]->pipe = 0;
 	n[2]->next = NULL;
 	return (n[0]);
