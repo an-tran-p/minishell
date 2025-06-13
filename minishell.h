@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/11 23:38:57 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/13 20:30:31 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <string.h>
 # include <sys/wait.h>
@@ -30,6 +31,7 @@
 
 typedef struct s_env
 {
+	int				ex_free;
 	int				j;
 	int				count;
 	int				m_err;
@@ -93,7 +95,7 @@ char				**copy_env(char **envp);
 int					ft_setenv(char ***env, char *key, char *n_value);
 char				**realloc_env(char **env, int add);
 
-void				handle_heredoc(t_step *step);
+void				handle_heredoc(t_step *step, char **env);
 void				handle_rd(t_step *step);
 char				*find_path(char *cmd, char **envp);
 void				ft_put_err(char *err_msg, char *para);
@@ -103,9 +105,16 @@ int					execute_single_cmd(t_step *step, char ***env);
 int					ft_printf(const char *str, ...);
 /* void				del_all(t_del *del, int i); */
 
-void				token_get_env(char **str, int *i, t_env *env);
-int					token_expand_str(char **str, int *i, t_env *env);
-int					token_quote_env(char **str, int *i);
-int					heredoc_expand(char **s);
+int					exit_status(int new_s, bool add);
+
+void				token_get_env(char **str, int *i, t_env *data, char **env);
+int					token_expand_str(char **str, int *i, t_env *data);
+int					token_quote_env(char **str, int *i, char **env);
+int					heredoc_expand(char **s, char **env);
+
+int					parser(char *s, t_step **lst, char **env);
+void				st_step(t_token **head, t_step **lst);
+void				st_lstprint(t_step *lst);
+void				st_lstclear(t_step **lst);
 
 #endif

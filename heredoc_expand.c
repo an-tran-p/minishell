@@ -6,13 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 23:25:13 by atran             #+#    #+#             */
-/*   Updated: 2025/06/11 23:25:20 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/13 18:14:40 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	heredoc_expand(char **s)
+int	heredoc_expand(char **s, char **env)
 {
 	int	i;
 	int	m_err;
@@ -23,7 +23,7 @@ int	heredoc_expand(char **s)
 	{
 		if ((*s)[i] == '$')
 		{
-			m_err = token_quote_env(s, &i);
+			m_err = token_quote_env(s, &i, env);
 			if (m_err)
 				return (m_err);
 		}

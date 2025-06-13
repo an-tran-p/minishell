@@ -1,57 +1,59 @@
 #include "tokenizer.h"
 
-int	token_expand_str(char **str, int *i, t_env *env)
+int	token_expand_str(char **str, int *i, t_env *data)
 {
-	env->len_expand = ft_strlen(env->expand);
-	env->s = (char *)ft_calloc((*i) + env->len_expand + env->len_tmp + 1,
+	data->len_expand = ft_strlen(data->expand);
+	data->s = (char *)ft_calloc((*i) + data->len_expand + data->len_tmp + 1,
 			sizeof(char));
-	if (!env->s)
+	if (!data->s)
 		return (-1);
-	ft_memcpy(env->s, *str, *i);
-	ft_memcpy(env->s + *i, env->expand, env->len_expand);
-	ft_memcpy(env->s + *i + env->len_expand, env->tmp, env->len_tmp + 1);
+	ft_memcpy(data->s, *str, *i);
+	ft_memcpy(data->s + *i, data->expand, data->len_expand);
+	ft_memcpy(data->s + *i + data->len_expand, data->tmp, data->len_tmp + 1);
 	free(*str);
-	env->tmp = NULL;
-	*i = *i + env->len_expand - 1;
-	*str = env->s;
+	data->tmp = NULL;
+	*i = *i + data->len_expand - 1;
+	*str = data->s;
+	if (data->ex_free)
+		free(data->expand);
 	return (0);
 }
 
-static void	token_env_all_space_back(t_token **cur, int *i, t_env *env)
+static void	token_env_all_space_back(t_token **cur, int *i, t_env *data)
 {
-	if (env->len_tmp)
+	if (data->len_tmp)
 	{
 		if (!(*i))
 		{
-			ft_memcpy((*cur)->s, env->tmp, env->len_tmp + 1);
+			ft_memcpy((*cur)->s, data->tmp, data->len_tmp + 1);
 			return ;
 		}
-		env->s = (char *)ft_calloc(env->len_tmp + 1, sizeof(char));
-		if (!env->s)
+		data->s = (char *)ft_calloc(data->len_tmp + 1, sizeof(char));
+		if (!data->s)
 		{
-			env->m_err = -1;
+			data->m_err = -1;
 			return ;
 		}
-		ft_memcpy(env->s, env->tmp, env->len_tmp);
+		ft_memcpy(data->s, data->tmp, data->len_tmp);
 		*i = 0;
-		(*cur)->s = env->s;
+		(*cur)->s = data->s;
 	}
 }
 
-static void	token_env_all_space(t_token **cur, int *i, t_env *env)
+static void	token_env_all_space(t_token **cur, int *i, t_env *data)
 {
-	if (!(*i) && !env->len_tmp)
+	if (!(*i) && !data->len_tmp)
 		(*cur)->type = DEL;
 	if (*i)
 	{
 		(*cur)->s[*i] = 0;
-		if (!env->len_tmp)
+		if (!data->len_tmp)
 			return ;
-		env->m_err = tk_appendfront(cur, (*cur)->s);
-		if (env->m_err)
+		data->m_err = tk_appendfront(cur, (*cur)->s);
+		if (data->m_err)
 			return ;
 	}
-	token_env_all_space_back(cur, i, env);
+	token_env_all_space_back(cur, i, data);
 }
 
 static int	chk_env_space(char *s)
@@ -74,26 +76,31 @@ static int	chk_env_space(char *s)
 	return (count);
 }
 
-int	token_env(t_token **cur, int *i, int rd)
+int	token_env(t_token **cur, int *i, int rd, char **env)
 {
-	t_env	env;
+	t_env	data;
 
-	token_get_env(&(*cur)->s, i, &env);
-	if (env.m_err || !env.j || !env.expand || !env.expand[0])
+	token_get_env(&(*cur)->s, i, &data, env);
+	if (data.m_err || !data.j || !data.expand || !data.expand[0])
 	{
-		if (!env.expand || !env.expand[0])
+		if (!data.expand || !data.expand[0])
 		{
-			if (rd && !(*i) && !env.len_tmp)
+			if (!(*i) && !data.len_tmp)
 			{
+				if(rd)
+				{
 				(*cur)->type = RD_ERR;
 				return (1);
+				}
+				else
+				(*cur)->type = DEL;
 			}
-			ft_memcpy((*cur)->s + (*i), env.tmp, env.len_tmp + 1);
+			ft_memcpy((*cur)->s + (*i), data.tmp, data.len_tmp + 1);
 			(*i)--;
 		}
 /*
-		if ((!env.expand || !env.expand[0])
-			&& (*i) == -1 && !env.len_tmp)
+		if ((!data.expand || !data.expand[0])
+			&& (*i) == -1 && !data.len_tmp)
 		{
 			if (rd)
 			{
@@ -103,19 +110,19 @@ int	token_env(t_token **cur, int *i, int rd)
 			(*cur)->type = DEL;
 		}
 */
-		return (env.m_err);
+		return (data.m_err);
 	}
-	env.count = chk_env_space(env.expand);
-	if (rd && env.count)
+	data.count = chk_env_space(data.expand);
+	if (rd && data.count)
 	{
 		(*cur)->type = RD_ERR;
 		return (1);
 	}
-	if (!env.count)
-		env.m_err = token_expand_str(&(*cur)->s, i, &env);
-	else if (env.count == -1)
-		token_env_all_space(cur, i, &env);
+	if (!data.count)
+		data.m_err = token_expand_str(&(*cur)->s, i, &data);
+	else if (data.count == -1)
+		token_env_all_space(cur, i, &data);
 	else
-		token_env_space(cur, i, &env);
-	return (env.m_err);
+		token_env_space(cur, i, &data);
+	return (data.m_err);
 }

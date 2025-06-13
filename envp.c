@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/05/31 23:16:54 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/13 20:26:02 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ char	**copy_env(char **envp)
 	char	**env;
 
 	i = 0;
+	if (!envp)
+		return (NULL);
 	while (envp[i])
 		i++;
 	env = malloc(sizeof(char *) * (i + 1));
@@ -118,6 +120,5 @@ char	**realloc_env(char **env, int add)
 	new_env[i] = NULL;
 	new_env[i + 1] = NULL;
 	free(env);
-	env = new_env;
-	return (env);
+	return (new_env);
 }

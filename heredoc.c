@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/11 23:26:38 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/13 22:56:09 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	heredoc_to_skip(char *delimeter)
 	}
 }
 
-int	last_heredoc(t_token *rd)
+int	last_heredoc(t_token *rd, char **env)
 {
 	int		fd[2];
 	char	*line;
@@ -65,7 +65,7 @@ int	last_heredoc(t_token *rd)
 		}
 		if (rd->type == RD_HEREDOC)
 		{
-			if (heredoc_expand(&line))
+			if (heredoc_expand(&line, env))
 				break ;
 		}
 		write(fd[1], line, ft_strlen(line));
@@ -76,7 +76,7 @@ int	last_heredoc(t_token *rd)
 	return (fd[0]);
 }
 
-int	heredoc_in_step(t_token *redirection)
+int	heredoc_in_step(t_token *redirection, char **env)
 {
 	int		fd_in;
 	t_token	*rd;
@@ -84,7 +84,8 @@ int	heredoc_in_step(t_token *redirection)
 
 	rd = redirection;
 	hd_num = count_hdoc(redirection);
-	fd_in = 0;
+	fd_in = -2;
+	// to check again other conditions
 	while (rd)
 	{
 		if (rd->type == RD_HDQUOTE || rd->type == RD_HEREDOC)
@@ -94,7 +95,7 @@ int	heredoc_in_step(t_token *redirection)
 				heredoc_to_skip(rd->s);
 			else if (hd_num == 0)
 			{
-				fd_in = last_heredoc(rd);
+				fd_in = last_heredoc(rd, env);
 				fprintf(stderr, "fd of this heredoc is %d\n", fd_in);
 				return (fd_in);
 			}
@@ -104,7 +105,7 @@ int	heredoc_in_step(t_token *redirection)
 	return (fd_in);
 }
 
-void	handle_heredoc(t_step *step)
+void	handle_heredoc(t_step *step, char **env)
 {
 	t_step	*st;
 
@@ -113,13 +114,13 @@ void	handle_heredoc(t_step *step)
 		return ;
 	while (st)
 	{
-		st->hd_fd = heredoc_in_step(st->rd);
-		if (st->hd_fd == -1)
+		st->hd_fd = heredoc_in_step(st->rd, env);
+		if (st->hd_fd == -2)
 		{
 			st = step;
 			while (st)
 			{
-				if (st->hd_fd != -1)
+				if (st->hd_fd != -2 && st->hd_fd != -1)
 					close(st->hd_fd);
 				st = st->next;
 			}

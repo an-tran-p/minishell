@@ -8,45 +8,58 @@ static int	chk_envchr(int c)
 		return (0);
 }
 
-static int	token_get_envname(t_env *env, char *s)
+static int	token_get_envname(t_env *data, char *s)
 {
-	env->j = 0;
-	while (chk_envchr(s[env->j]))
+	data->j = 0;
+	data->ex_free = 0;
+	if (s[0] == '?')
 	{
-		if (ft_isdigit(s[0]))
-		{
-			env->j = 1;
-			break ;
-		}
-		env->j ++;
-	}
-	if (env->j)
-	{
-		env->var = (char *)ft_calloc(env->j + 1, sizeof(char));
-		if (!env->var)
+		data->expand = ft_itoa(exit_status(0, false));
+		if (!data->expand)
 			return (-1);
-		ft_memcpy(env->var, s, env->j);
+		data->ex_free = 1;
+		data->j = 1;
+	}
+	else
+	{
+		while (chk_envchr(s[data->j]))
+		{
+			if (ft_isdigit(s[0]))
+			{
+				data->j = 1;
+				break ;
+			}
+			data->j ++;
+		}
+	}
+	if (data->j)
+	{
+		data->var = (char *)ft_calloc(data->j + 1, sizeof(char));
+		if (!data->var)
+			return (-1);
+		ft_memcpy(data->var, s, data->j);
 	}
 	return (0);
 }
 
-void	token_get_env(char **str, int *i, t_env *env)
+void	token_get_env(char **str, int *i, t_env *data, char **env)
 {
-	env->var = NULL;
-	env->m_err = token_get_envname(env, (*str) + (*i) + 1);
-	if (env->m_err || !env->j)
+	data->var = NULL;
+	data->m_err = token_get_envname(data, (*str) + (*i) + 1);
+	if (data->m_err || !data->j)
 		return ;
 //change function later on
-	env->expand = getenv(env->var);
-	free(env->var);
-	env->tmp = (*str) + (*i) + env->j + 1;
-	env->len_tmp = ft_strlen(env->tmp);
+	if (!data->ex_free)
+		data->expand = ft_getenv(env, data->var);
+	free(data->var);
+	data->tmp = (*str) + (*i) + data->j + 1;
+	data->len_tmp = ft_strlen(data->tmp);
 /*
-	if (!env->expand || !env->expand[0])
+	if (!data->expand || !data->expand[0])
 	{
-printf("from token_get_nev *i:%d env->len_tmp:%d\n", *i, env->len_tmp);
-		if(!(*i) && !env->len_tmp)
-		ft_memcpy((*str) + (*i), env->tmp, env->len_tmp + 1);
+printf("from token_get_nev *i:%d data->len_tmp:%d\n", *i, data->len_tmp);
+		if(!(*i) && !data->len_tmp)
+		ft_memcpy((*str) + (*i), data->tmp, data->len_tmp + 1);
 		(*i)--;
 	}	
 */

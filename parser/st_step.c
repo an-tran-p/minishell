@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/10 21:10:40 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/13 17:44:43 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	st_step(t_token **head, t_step **lst)
 		{
 			tk_lstclear(head);
 			st_lstclear(lst);
+//			ft_putstr_fd("Memory alllocation failed during parsing
 			exit(EXIT_FAILURE);
 		}
 		st_lstadd_back(lst, new_node);

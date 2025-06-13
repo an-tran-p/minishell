@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/11 19:10:31 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:02:18 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,15 @@ int	tokenizer(t_token **head, char *s)
 	init_t_line(&line, s);
 	line.s += trim_space(line.s);
 	if (!line.s[0])
-	{
-		free(line.tmp);
 		return (0);
-	}
 	create_tokens(head, &line);
 	if (line.exit_no)
 		return (line.exit_no);
 	tk_lstprint(*head);
-	free(line.tmp);
 	return (0);
 }
 
-int	parser(char *s, t_step **lst)
+int	parser(char *s, t_step **lst, char **env)
 {
 	int		exit_no;
 	t_token	*head;
@@ -72,13 +68,14 @@ int	parser(char *s, t_step **lst)
 	exit_no = tokenizer(&head, s);
 	if (!head || exit_no)
 		return (exit_no);
-	exit_no = chk_tokens(&head);
+	exit_no = chk_tokens(&head, env);
 	if (exit_no)
 		return (exit_no);
 	if (head)
 	{
 		tk_lstprint(head);
 		st_step(&head, lst);
+		st_lstprint(*lst);
 	}
 //	tk_lstclear(&head);
 	return (exit_no);

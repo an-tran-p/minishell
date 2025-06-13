@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:29:22 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/11 20:06:03 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/12 20:22:51 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define TOKENIZER_H
 
 # include "../minishell.h"
-# include "../libft/libft.h"
+# include "../Libft/libft.h"
 
 typedef struct s_line
 {
@@ -28,19 +28,18 @@ typedef struct s_line
 }	t_line;
 
 int		tokenizer(t_token **head, char *s);
-int		parser(char *s, t_step **lst);
 
 void	st_step(t_token **head, t_step **lst);
 void	st_lstprint(t_step *lst);
 void	st_lstclear(t_step **lst);
 
 int		type_isrd(t_etype type);
-int		chk_tokens(t_token **head);
+int		chk_tokens(t_token **head, char **env);
 
-int		token_quote(char **str, int *i, int heredoc);
-int		token_flag(t_token **head, t_token *cur, int rd);
+int		token_quote(char **str, int *i, int heredoc, char **env);
+int		token_flag(t_token **head, t_token *cur, int rd, char **env);
 
-int		token_env(t_token **cur, int *i, int rd);
+int		token_env(t_token **cur, int *i, int rd, char **env);
 
 void	token_env_space(t_token **cur, int *i, t_env *env);
 

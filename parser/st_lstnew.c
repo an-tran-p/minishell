@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   st_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/10 21:00:47 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/13 22:21:30 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
 
 static t_token	*new_node_rd(t_token **head, t_token *tmp, t_token *pre,
-	t_step *new_node)
+		t_step *new_node)
 {
 	if (!pre)
 		*head = tmp->next;
@@ -50,7 +50,7 @@ static int	cmd_count(t_token **head, t_step *new_node)
 	{
 		if (tmp->type == WORD)
 		{
-			w_count ++;
+			w_count++;
 			pre = tmp;
 			tmp = tmp->next;
 		}
@@ -74,14 +74,14 @@ static void	new_node_cmd(t_token **head, t_step *new_node, int w_count)
 		*head = tmp->next;
 		new_node->cmd[i] = tmp->s;
 		free(tmp);
-		i ++;
+		i++;
 	}
 	new_node->cmd[i] = NULL;
 }
 
 static void	chk_pipe(t_token **head, t_step *new_node)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	if ((*head) && (*head)->type == PIPE)
 	{
@@ -99,6 +99,7 @@ t_step	*st_lstnew(t_token **head)
 	t_step	*new_node;
 
 	new_node = (t_step *)ft_calloc(1, sizeof(t_step));
+	fprintf(stderr, "initialize hd_fd %d\n", new_node->hd_fd);
 	if (!new_node)
 		return (NULL);
 	w_count = cmd_count(head, new_node);
@@ -108,7 +109,7 @@ t_step	*st_lstnew(t_token **head)
 		if (!new_node->cmd)
 		{
 			tk_lstclear(&new_node->rd);
-			free (new_node);
+			free(new_node);
 			return (NULL);
 		}
 		new_node_cmd(head, new_node, w_count);
@@ -116,4 +117,3 @@ t_step	*st_lstnew(t_token **head)
 	chk_pipe(head, new_node);
 	return (new_node);
 }
-

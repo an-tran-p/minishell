@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 14:01:41 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/10 19:22:18 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/12 15:16:19 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ char	*get_tk_name(t_etype type)
 		return ("RD_APPEND");
 	else if (type == RD_ERR)
 		return ("RD_ERR");
-	else if (type == CMD)
-		return ("CMD");
 	else
 		return ("PIPE");
 }

@@ -6,55 +6,100 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/11 23:39:21 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/13 23:13:24 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* void	del_all(t_del *del, int i)
+int	exit_status(int new_s, bool add)
 {
-	if (del)
-	{
-		ft_free_strarr(*(del->env));
-		st_lstclear(del->head);
-	}
-	if (i)
-		exit(EXIT_FAILURE);
-} */
-void	readline_err(char *line, int status, char **env)
-{
-	// memory failure? or end program
-	if (!line)
-	{
-		ft_free_strarr(env);
-		if (errno == ENOMEM)
-		{
-			exit(EXIT_FAILURE);
-		}
-		else
-			exit(status);
-	}
-}
+	static int	status;
 
-int	shell_execution(t_step *step, char **env)
-{
-	int		status;
-	t_del	del;
-
-	status = 0;
-	del.env = &env;
-	del.head = &step;
-	handle_heredoc(step);
-	if (step->pipe)
-		status = create_processes(step, env);
-	else
-		status = execute_single_cmd(step, &env);
-	ft_free_strarr(env);
-	st_lstclear(&step);
+	if (add)
+		status = new_s;
 	return (status);
 }
 
+// void	readline_err(char *line, int status, char **env)
+// {
+// 	// memory failure? or end program
+// 	(void)env;
+// 	(void)status;
+// 	fprintf(stderr, "I am in rl_eer");
+// 	if (!line)
+// 	{
+// 		/* ft_free_strarr(env); */
+// 		fprintf(stderr, "I am in rl_eer ENONEM");
+// 		/* if (errno == ENOMEM)
+// 		{
+// 			exit(EXIT_FAILURE);
+// 		}
+// 		else */
+// 		return ; //(status);
+// 	}
+// }
+
+int	shell_execution(t_step **step, char ***env)
+{
+	int	status;
+
+	status = 0;
+	if ((*step)->rd)
+		handle_heredoc(*step, *env);
+	if ((*step)->pipe)
+		status = create_processes(*step, *env);
+	else if (!((*step)->pipe))
+		status = execute_single_cmd(*step, env);
+	st_lstclear(step);
+	return (status);
+}
+
+void	minishell(int status, char *line, t_step *step, char **envp)
+{
+	char	**env;
+
+	env = copy_env(envp);
+	if (!env)
+		exit(EXIT_FAILURE);
+	while (1)
+	{
+		fprintf(stderr, "line %s\n", line);
+		line = readline("minishell% ");
+		if (!line)
+			break ; // readline_err(line, status, env);
+					// need to consider a bit more
+		if (line[0])
+		{
+			add_history(line);
+			status = parser(line, &step, env);
+			exit_status(status, true);
+			if (step)
+				status = shell_execution(&step, &env);
+			free(line);
+			line = NULL;
+			exit_status(status, true);
+			fprintf(stderr, "I am exiting now\n");
+			printf("%d %s\n", status, line);
+		}
+	}
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	int		status;
+	char	*line;
+	t_step	*step;
+
+	(void)argc;
+	(void)argv;
+	step = NULL;
+	line = NULL;
+	status = 0;
+	minishell(status, line, step, envp);
+	fprintf(stdin, "reach\n");
+}
+/*
 int	main(int argc, char **argv, char **envp)
 {
 	int		status;
@@ -78,8 +123,27 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			status = parser(line, &step);
-			if (!status)
-				status = shell_execution(step, env);
+free(line);
+line = NULL;
+printf("%d %s\n", status, line);
+			if (!step)
+				status = shell_execution(&step, env);
 		}
 	}
 }
+*/
+
+/* void	del_all(t_del *del, int i)
+{
+	static int	status;
+	static int	status;
+	static int	status;
+
+	if (del)
+	{
+		ft_free_strarr(*(del->env));
+		st_lstclear(del->head);
+	}
+	if (i)
+		exit(EXIT_FAILURE);
+} */
