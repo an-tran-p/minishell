@@ -6,11 +6,11 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 15:45:33 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 22:57:59 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	count_hdoc(t_token *redirection)
 {

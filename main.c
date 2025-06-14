@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/14 15:39:39 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 23:15:48 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,6 @@ int	exit_status(int new_s, bool add)
 // 		return ; //(status);
 // 	}
 // }
-void	initialize_hd_fd(t_step *step)
-{
-	t_step	*st;
-
-	if (!step)
-		return ;
-	st = step;
-	while (st)
-	{
-		st->hd_fd = -2;
-		st = st->next;
-	}
-}
 
 int	shell_execution(t_step **step, char ***env)
 {
@@ -64,6 +51,7 @@ int	shell_execution(t_step **step, char ***env)
 		status = create_processes(*step, *env);
 	else if (!((*step)->pipe))
 		status = execute_single_cmd(*step, env);
+	close_hd(*step);
 	st_lstclear(step);
 	return (status);
 }
@@ -79,8 +67,7 @@ void	minishell(int status, char *line, t_step *step, char **envp)
 	{
 		line = readline("minishell% ");
 		if (!line)
-			break ; // readline_err(line, status, env);
-					// need to consider a bit more
+			break ;
 		if (line[0])
 		{
 			add_history(line);
@@ -143,18 +130,3 @@ printf("%d %s\n", status, line);
 	}
 }
 */
-
-/* void	del_all(t_del *del, int i)
-{
-	static int	status;
-	static int	status;
-	static int	status;
-
-	if (del)
-	{
-		ft_free_strarr(*(del->env));
-		st_lstclear(del->head);
-	}
-	if (i)
-		exit(EXIT_FAILURE);
-} */

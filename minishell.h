@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 03:18:46 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 23:30:29 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,18 @@ typedef struct s_del
 	char			***env;
 }					t_del;
 
+typedef struct s_pipe
+{
+	int				fds[2];
+	int				prev_fd;
+	pid_t			pid;
+}					t_pipe;
+
 int					is_builtins(char *argv);
-int					execute_builtin(char **argv, char ***env);
+void				execute_builtin_in_child(char **argv, char ***env,
+						t_step *step, int pipe_fd);
+int					execute_builtin_in_parent(char **argv, char ***env,
+						t_step *step, int pipe_fd);
 int					ft_echo(char **argv);
 int					ft_pwd(void);
 int					ft_cd(char **argv, char **env);
@@ -95,13 +105,20 @@ char				**copy_env(char **envp);
 int					ft_setenv(char ***env, char *key, char *n_value);
 char				**realloc_env(char **env, int add);
 
+void				initialize_hd_fd(t_step *step);
 void				handle_heredoc(t_step *step, char **env);
+void				close_hd(t_step *step);
 void				handle_rd(t_step *st, t_step *step, char **env);
+
+int					have_infile(t_token *redirection);
+int					have_outfile(t_token *redirection);
 char				*find_path(char *cmd, char **envp);
 void				ft_put_err(char *err_msg, char *para);
 int					create_processes(t_step *step, char **env);
 int					execute_single_cmd(t_step *step, char ***env);
-void				ft_free_step(t_step *step);
+void				execute(char **cmd, char **env, t_step *step);
+void				ft_free_eve(t_step *step, char **env);
+void				close_hd(t_step *step);
 
 int					ft_printf(const char *str, ...);
 

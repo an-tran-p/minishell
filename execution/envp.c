@@ -6,11 +6,11 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/06/13 20:26:02 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 23:10:10 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*get_new_entry(char *k, char *n_value)
 {

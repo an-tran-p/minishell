@@ -6,15 +6,19 @@
 #    By: atran <atran@student.hive.fi>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/06 17:50:04 by atran             #+#    #+#              #
-#    Updated: 2025/06/13 18:17:37 by atran            ###   ########.fr        #
+#    Updated: 2025/06/14 23:23:26 by atran            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS = minishell.c envp.c builtins/pwd.c builtins/echo.c builtins/cd.c \
+SRCS =  main.c \
+		execution/envp.c execution/exec_pipe.c execution/execution.c \
+		execution/find_path.c execution/free_mem.c\
+		builtins/pwd.c builtins/echo.c builtins/cd.c \
 		builtins/export.c builtins/env.c builtins/unset.c builtins/builtin_exec.c \
-		find_path.c heredoc.c redirection.c main.c heredoc_expand.c \
+		hdoc_n_redirection/heredoc.c hdoc_n_redirection/redirection.c \
+		hdoc_n_redirection/heredoc_expand.c hdoc_n_redirection/open_n_close_hd.c\
 		parser/tokenizer.c parser/tokenizer_handle.c parser/tokenizer_util.c \
 		parser/parser_err.c parser/parser_synerr.c parser/token_err_chk.c \
 		parser/token_flag.c \

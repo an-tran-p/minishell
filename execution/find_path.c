@@ -6,11 +6,11 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 16:25:59 by atran             #+#    #+#             */
-/*   Updated: 2025/06/11 19:40:24 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 23:10:15 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	ft_put_err(char *err_msg, char *para)
 {

@@ -1,36 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   free_mem.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 19:38:08 by atran            ###   ########.fr       */
+/*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
+/*   Updated: 2025/06/14 23:22:39 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_echo(char **argv)
+void	free_rd(t_token *rd)
 {
-	int	i;
-	int	n;
+	t_token	*tmp;
 
-	i = 0;
-	n = 0;
-	if (argv[1] && ft_strncmp(argv[1], "-n", 3) == 0)
+	while (rd)
 	{
-		n = 1;
-		i = 1;
+		tmp = rd->next;
+		free(rd->s);
+		free(rd);
+		rd = tmp;
 	}
-	while (argv[++i])
+}
+
+void	ft_free_step(t_step *step)
+{
+	t_step	*tmp;
+
+	while (step)
 	{
-		ft_printf("%s", argv[i]);
-		if (argv[i + 1])
-			ft_printf(" ");
+		tmp = step->next;
+		if (step->rd)
+			free_rd(step->rd);
+		if (step->cmd)
+			ft_free_strarr(step->cmd);
+		free(step);
+		step = tmp;
 	}
-	if (n == 0)
-		ft_printf("\n");
-	return (0);
+}
+
+void	ft_free_eve(t_step *step, char **env)
+{
+	ft_free_strarr(env);
+	ft_free_step(step);
 }

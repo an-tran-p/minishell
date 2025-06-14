@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/04 18:51:07 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 22:57:18 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,48 @@ int	is_builtins(char *argv)
 	return (0);
 }
 
-int	execute_builtin(char **argv, char ***env)
+void	execute_builtin_in_child(char **argv, char ***env, t_step *step,
+		int pipe_fd)
 {
-	int	exit;
+	int	status;
 
 	if (ft_strncmp(argv[0], "echo", 5) == 0)
-		exit = ft_echo(argv);
+		status = ft_echo(argv);
 	if (ft_strncmp(argv[0], "pwd", 4) == 0)
-		exit = ft_pwd();
+		status = ft_pwd();
 	if (ft_strncmp(argv[0], "cd", 3) == 0)
-		exit = ft_cd(argv, *env);
+		status = ft_cd(argv, *env);
 	if (ft_strncmp(argv[0], "export", 7) == 0)
-		exit = ft_export(argv, env);
+		status = ft_export(argv, env);
 	if (ft_strncmp(argv[0], "env", 4) == 0)
-		exit = ft_env(argv, *env);
+		status = ft_env(argv, *env);
 	if (ft_strncmp(argv[0], "unset", 6) == 0)
-		exit = ft_unset(argv, env);
-	return (exit);
+		status = ft_unset(argv, env);
+	ft_free_eve(step, *env);
+	if (pipe_fd != -1)
+		close(pipe_fd);
+	exit(status);
+}
+
+int	execute_builtin_in_parent(char **argv, char ***env, t_step *step,
+		int pipe_fd)
+{
+	int	status;
+
+	(void)step;
+	if (ft_strncmp(argv[0], "echo", 5) == 0)
+		status = ft_echo(argv);
+	if (ft_strncmp(argv[0], "pwd", 4) == 0)
+		status = ft_pwd();
+	if (ft_strncmp(argv[0], "cd", 3) == 0)
+		status = ft_cd(argv, *env);
+	if (ft_strncmp(argv[0], "export", 7) == 0)
+		status = ft_export(argv, env);
+	if (ft_strncmp(argv[0], "env", 4) == 0)
+		status = ft_env(argv, *env);
+	if (ft_strncmp(argv[0], "unset", 6) == 0)
+		status = ft_unset(argv, env);
+	if (pipe_fd != -1)
+		close(pipe_fd);
+	return (status);
 }

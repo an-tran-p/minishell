@@ -6,11 +6,11 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 23:25:13 by atran             #+#    #+#             */
-/*   Updated: 2025/06/13 18:14:40 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 22:57:53 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	heredoc_expand(char **s, char **env)
 {

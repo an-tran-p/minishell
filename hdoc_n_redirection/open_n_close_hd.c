@@ -1,36 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   open_n_close_hd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 19:38:08 by atran            ###   ########.fr       */
+/*   Created: 2025/06/11 23:25:13 by atran             #+#    #+#             */
+/*   Updated: 2025/06/15 00:06:36 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_echo(char **argv)
+void	initialize_hd_fd(t_step *step)
 {
-	int	i;
-	int	n;
+	t_step	*st;
 
-	i = 0;
-	n = 0;
-	if (argv[1] && ft_strncmp(argv[1], "-n", 3) == 0)
+	if (!step)
+		return ;
+	st = step;
+	while (st)
 	{
-		n = 1;
-		i = 1;
+		st->hd_fd = -2;
+		st = st->next;
 	}
-	while (argv[++i])
+}
+
+void	close_hd(t_step *step)
+{
+	t_step	*st;
+
+	st = step;
+	fprintf(stderr, "I am closing all hd_fd\n");
+	while (st)
 	{
-		ft_printf("%s", argv[i]);
-		if (argv[i + 1])
-			ft_printf(" ");
+		if (st->hd_fd != -1 && st->hd_fd != -2)
+		{
+			close(st->hd_fd);
+			st->hd_fd = -2;
+		}
+		st = st->next;
 	}
-	if (n == 0)
-		ft_printf("\n");
-	return (0);
 }

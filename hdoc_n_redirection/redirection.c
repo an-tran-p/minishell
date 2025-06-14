@@ -6,11 +6,11 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 03:20:10 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/15 00:17:32 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	count_infile(t_token *redirection)
 {
@@ -55,11 +55,9 @@ void	handle_infile(t_token *redirection, t_step *step, char **env)
 	int		fd_in;
 	t_token	*rd;
 	int		inf_num;
-	int		inf_last;
 
 	rd = redirection;
 	inf_num = count_infile(redirection);
-	inf_last = infile_last(redirection);
 	while (rd)
 	{
 		if (rd->type == RD_INFILE)
@@ -69,11 +67,10 @@ void	handle_infile(t_token *redirection, t_step *step, char **env)
 			if (fd_in == -1)
 			{
 				ft_printf("minishell: %s: %s\n", strerror(errno), rd->s);
-				ft_free_strarr(env);
-				ft_free_step(step);
+				ft_free_eve(step, env);
 				exit(1);
 			}
-			else if (inf_num == 0 && inf_last == 1)
+			else if (inf_num == 0 && infile_last(redirection) == 1)
 				dup2(fd_in, STDIN_FILENO);
 			close(fd_in);
 		}
@@ -100,8 +97,7 @@ void	handle_outfile(t_token *redirection, t_step *step, char **env)
 			if (fd_out == -1)
 			{
 				ft_printf("%s: %s\n", strerror(errno), rd->s);
-				ft_free_strarr(env);
-				ft_free_step(step);
+				ft_free_eve(step, env);
 				exit(1);
 			}
 			dup2(fd_out, STDOUT_FILENO);
@@ -121,8 +117,6 @@ void	handle_rd(t_step *st, t_step *step, char **env)
 		return ;
 	if (st->hd_fd != -1 && st->hd_fd != -2)
 	{
-		fprintf(stderr, "I am closing heredoc %d\n", st->hd_fd);
-		// if (step->pipe)
 		dup2(st->hd_fd, STDIN_FILENO);
 		close(st->hd_fd);
 	}
