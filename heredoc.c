@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 02:36:19 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 15:45:33 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,9 @@ void	handle_heredoc(t_step *step, char **env)
 		return ;
 	while (st)
 	{
+		fprintf(stderr, "I am in heredoc\n");
 		st->hd_fd = heredoc_in_step(st->rd, env);
-		if (st->hd_fd == -2)
+		if (st->hd_fd == -1)
 		{
 			st = step;
 			while (st)

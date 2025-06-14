@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 03:19:31 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 15:57:43 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,19 +188,19 @@ int	process_wait(pid_t pid, int i)
 
 void	parent_process(int *prev_fd, int fds[2], t_step *st, pid_t pid)
 {
-	if (*prev_fd != -1)
+	if (*prev_fd >= 0)
 	{
 		close(*prev_fd);
 		*prev_fd = -1;
 	}
-	if (st->hd_fd != -1 && st->hd_fd != -2 && st->hd_fd)
+	if (st->hd_fd >= 0)
 	{
 		close(st->hd_fd);
 		st->hd_fd = -2;
 	}
 	if (st->pipe && pid != -1)
 	{
-		close(fds[1]); // dong dung r nhe
+		close(fds[1]);
 		*prev_fd = fds[0];
 	}
 	else

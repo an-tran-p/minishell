@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/14 02:28:15 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 15:39:39 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,7 @@ int	shell_execution(t_step **step, char ***env)
 
 	status = 0;
 	initialize_hd_fd(*step);
-	if ((*step)->rd)
-		handle_heredoc(*step, *env);
+	handle_heredoc(*step, *env);
 	if ((*step)->pipe)
 		status = create_processes(*step, *env);
 	else if (!((*step)->pipe))
