@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/13 23:31:08 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 03:19:31 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,26 @@ void	ft_free_step(t_step *step)
 	}
 }
 
-void	execute(char **cmd, char **env)
+void	execute(char **cmd, char **env, t_step *step)
 {
 	char	*path;
 
 	if (!cmd || !cmd[0])
+	{
+		ft_free_strarr(env);
+		ft_free_step(step);
 		exit(0);
+	}
 	path = find_path(cmd[0], env);
 	if (!path)
 	{
 		ft_put_err(" :command not found", cmd[0]);
+		ft_free_strarr(env);
+		ft_free_step(step);
 		exit(127);
 	}
 	else if (execve(path, cmd, env) == -1)
 	{
-		fprintf(stderr, "Reach 2\n");
 		free(path);
 		perror("Execution fails\n");
 		exit(127);
@@ -102,7 +107,7 @@ void	execute_child_process(int *fds, int prev_fd, t_step *st, t_step *step,
 	int	status;
 
 	fprintf(stderr, "PID: %d executing command: %s\n", getpid(), st->cmd[0]);
-	if (prev_fd != -1 && !have_infile(st->rd) && st->hd_fd <= 0)
+	if (prev_fd != -1 && !have_infile(st->rd) && st->hd_fd < 0)
 		dup2(prev_fd, STDIN_FILENO);
 	if (st->pipe && !have_outfile(st->rd))
 		dup2(fds[1], STDOUT_FILENO);
@@ -110,12 +115,11 @@ void	execute_child_process(int *fds, int prev_fd, t_step *st, t_step *step,
 		close(prev_fd);
 	if (st->pipe)
 	{
-		fprintf(stderr, "Reachhhh\n");
 		close(fds[0]);
 		close(fds[1]);
 	}
 	if (st->rd)
-		handle_rd(st);
+		handle_rd(st, step, env);
 	if (is_builtins(st->cmd[0]))
 	{
 		status = execute_builtin(st->cmd, &env);
@@ -123,7 +127,7 @@ void	execute_child_process(int *fds, int prev_fd, t_step *st, t_step *step,
 		ft_free_step(step);
 		exit(status);
 	}
-	execute(st->cmd, env);
+	execute(st->cmd, env, step);
 }
 
 int	execute_single_cmd(t_step *step, char ***env)
@@ -132,7 +136,6 @@ int	execute_single_cmd(t_step *step, char ***env)
 	pid_t	pid;
 
 	status = 0;
-	fprintf(stderr, "I am single cmd\n");
 	if (step->cmd && is_builtins(step->cmd[0]) && !step->rd)
 		return (execute_builtin(step->cmd, env));
 	else
@@ -143,16 +146,15 @@ int	execute_single_cmd(t_step *step, char ***env)
 		if (pid == 0)
 		{
 			if (step->rd)
-				handle_rd(step);
+				handle_rd(step, step, *env);
 			if (step->cmd && is_builtins(step->cmd[0]))
 				return (execute_builtin(step->cmd, env));
 			else if (step->cmd && is_builtins(step->cmd[0]) == 0)
-				execute(step->cmd, *env);
+				execute(step->cmd, *env, step);
 		}
 		else
 			waitpid(pid, &status, 0);
 	}
-	write(2, "2\n", 2);
 	if (step->hd_fd != -2 && step->hd_fd != -1 && step->hd_fd)
 		close(step->hd_fd);
 	return (WEXITSTATUS(status));
@@ -186,23 +188,21 @@ int	process_wait(pid_t pid, int i)
 
 void	parent_process(int *prev_fd, int fds[2], t_step *st, pid_t pid)
 {
-	if (*prev_fd != -1 && *prev_fd != 1 && *prev_fd != 0)
+	if (*prev_fd != -1)
 	{
 		close(*prev_fd);
 		*prev_fd = -1;
 	}
-	fprintf(stderr, "hd_fd %d\n", st->hd_fd);
-	if (st->hd_fd != 0)
+	if (st->hd_fd != -1 && st->hd_fd != -2 && st->hd_fd)
 	{
 		close(st->hd_fd);
-		st->hd_fd = -1;
+		st->hd_fd = -2;
 	}
 	if (st->pipe && pid != -1)
 	{
 		close(fds[1]); // dong dung r nhe
 		*prev_fd = fds[0];
 	}
-	// if (!st->pipe || pid == -1)
 	else
 	{
 		close(fds[0]);
@@ -234,10 +234,7 @@ int	create_processes(t_step *step, char **env)
 		}
 		pid = fork();
 		if (pid == -1)
-		{
-			fprintf(stderr, "I break\n");
 			break ;
-		}
 		if (pid == 0)
 			execute_child_process(fds, prev_fd, st, step, env);
 		parent_process(&prev_fd, fds, st, pid);

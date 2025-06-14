@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/13 20:30:31 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 03:18:46 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,14 +96,14 @@ int					ft_setenv(char ***env, char *key, char *n_value);
 char				**realloc_env(char **env, int add);
 
 void				handle_heredoc(t_step *step, char **env);
-void				handle_rd(t_step *step);
+void				handle_rd(t_step *st, t_step *step, char **env);
 char				*find_path(char *cmd, char **envp);
 void				ft_put_err(char *err_msg, char *para);
 int					create_processes(t_step *step, char **env);
 int					execute_single_cmd(t_step *step, char ***env);
+void				ft_free_step(t_step *step);
 
 int					ft_printf(const char *str, ...);
-/* void				del_all(t_del *del, int i); */
 
 int					exit_status(int new_s, bool add);
 

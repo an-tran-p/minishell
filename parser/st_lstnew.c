@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/13 22:21:30 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 02:36:56 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ t_step	*st_lstnew(t_token **head)
 	t_step	*new_node;
 
 	new_node = (t_step *)ft_calloc(1, sizeof(t_step));
-	fprintf(stderr, "initialize hd_fd %d\n", new_node->hd_fd);
 	if (!new_node)
 		return (NULL);
 	w_count = cmd_count(head, new_node);

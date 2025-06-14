@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/13 23:13:24 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 02:28:15 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,26 @@ int	exit_status(int new_s, bool add)
 // 		return ; //(status);
 // 	}
 // }
+void	initialize_hd_fd(t_step *step)
+{
+	t_step	*st;
+
+	if (!step)
+		return ;
+	st = step;
+	while (st)
+	{
+		st->hd_fd = -2;
+		st = st->next;
+	}
+}
 
 int	shell_execution(t_step **step, char ***env)
 {
 	int	status;
 
 	status = 0;
+	initialize_hd_fd(*step);
 	if ((*step)->rd)
 		handle_heredoc(*step, *env);
 	if ((*step)->pipe)
@@ -64,7 +78,6 @@ void	minishell(int status, char *line, t_step *step, char **envp)
 		exit(EXIT_FAILURE);
 	while (1)
 	{
-		fprintf(stderr, "line %s\n", line);
 		line = readline("minishell% ");
 		if (!line)
 			break ; // readline_err(line, status, env);
@@ -97,7 +110,6 @@ int	main(int argc, char **argv, char **envp)
 	line = NULL;
 	status = 0;
 	minishell(status, line, step, envp);
-	fprintf(stdin, "reach\n");
 }
 /*
 int	main(int argc, char **argv, char **envp)

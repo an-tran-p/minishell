@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/13 22:56:09 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 02:36:19 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ int	heredoc_in_step(t_token *redirection, char **env)
 	rd = redirection;
 	hd_num = count_hdoc(redirection);
 	fd_in = -2;
-	// to check again other conditions
 	while (rd)
 	{
 		if (rd->type == RD_HDQUOTE || rd->type == RD_HEREDOC)

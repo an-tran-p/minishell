@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/13 23:24:18 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/14 03:20:10 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	infile_last(t_token *redirection)
 	return (flag);
 }
 
-void	handle_infile(t_token *redirection)
+void	handle_infile(t_token *redirection, t_step *step, char **env)
 {
 	int		fd_in;
 	t_token	*rd;
@@ -69,6 +69,8 @@ void	handle_infile(t_token *redirection)
 			if (fd_in == -1)
 			{
 				ft_printf("minishell: %s: %s\n", strerror(errno), rd->s);
+				ft_free_strarr(env);
+				ft_free_step(step);
 				exit(1);
 			}
 			else if (inf_num == 0 && inf_last == 1)
@@ -79,7 +81,7 @@ void	handle_infile(t_token *redirection)
 	}
 }
 
-void	handle_outfile(t_token *redirection)
+void	handle_outfile(t_token *redirection, t_step *step, char **env)
 {
 	int		fd_out;
 	t_token	*rd;
@@ -98,6 +100,8 @@ void	handle_outfile(t_token *redirection)
 			if (fd_out == -1)
 			{
 				ft_printf("%s: %s\n", strerror(errno), rd->s);
+				ft_free_strarr(env);
+				ft_free_step(step);
 				exit(1);
 			}
 			dup2(fd_out, STDOUT_FILENO);
@@ -107,27 +111,28 @@ void	handle_outfile(t_token *redirection)
 	}
 }
 
-void	handle_rd(t_step *step)
+void	handle_rd(t_step *st, t_step *step, char **env)
 {
 	t_token	*rd;
-	t_step	*st;
+	t_step	*temp;
 
-	rd = step->rd;
+	rd = st->rd;
 	if (!rd)
 		return ;
-	if (step->hd_fd != -1)
+	if (st->hd_fd != -1 && st->hd_fd != -2)
 	{
-		fprintf(stderr, "I am closing heredoc %d\n", step->hd_fd);
-		dup2(step->hd_fd, STDIN_FILENO);
-		close(step->hd_fd);
+		fprintf(stderr, "I am closing heredoc %d\n", st->hd_fd);
+		// if (step->pipe)
+		dup2(st->hd_fd, STDIN_FILENO);
+		close(st->hd_fd);
 	}
-	handle_infile(step->rd);
-	handle_outfile(step->rd);
-	st = step;
-	while (st)
+	handle_infile(st->rd, step, env);
+	handle_outfile(st->rd, step, env);
+	temp = step;
+	while (temp)
 	{
-		if (st->hd_fd != -1)
-			close(st->hd_fd);
-		st = st->next;
+		if (temp->hd_fd != -1 && temp->hd_fd != -2)
+			close(temp->hd_fd);
+		temp = temp->next;
 	}
 }
