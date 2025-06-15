@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 22:57:18 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/15 23:20:01 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	execute_builtin_in_child(char **argv, char ***env, t_step *step,
 		status = ft_env(argv, *env);
 	if (ft_strncmp(argv[0], "unset", 6) == 0)
 		status = ft_unset(argv, env);
+	if (ft_strncmp(argv[0], "exit", 5) == 0)
+		status = ft_exit(argv, *env, step);
 	ft_free_eve(step, *env);
 	if (pipe_fd != -1)
 		close(pipe_fd);
@@ -63,6 +65,8 @@ int	execute_builtin_in_parent(char **argv, char ***env, t_step *step,
 		status = ft_env(argv, *env);
 	if (ft_strncmp(argv[0], "unset", 6) == 0)
 		status = ft_unset(argv, env);
+	if (ft_strncmp(argv[0], "exit", 5) == 0)
+		status = ft_exit(argv, *env, step);
 	if (pipe_fd != -1)
 		close(pipe_fd);
 	return (status);

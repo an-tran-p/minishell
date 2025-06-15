@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/13 20:52:51 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/15 23:40:17 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ int	check_valid_id(char *entry, char c)
 	if (ft_isalpha(entry[0]) == 0 && entry[0] != '_')
 	{
 		if (c == 'e')
-			ft_printf("minishell: export: \'%s\': not a valid identifier\n",
-				entry);
+			ft_put_err("not a valid identifier", "export", entry);
 		return (1);
 	}
 	i = 1;
@@ -82,8 +81,7 @@ int	check_valid_id(char *entry, char c)
 		if (ft_isalnum(entry[i]) == 0 && entry[i] != '_')
 		{
 			if (c == 'e')
-				ft_printf("minishell: export: \'%s\': not a valid identifier\n",
-					entry);
+				ft_put_err("not a valid identifier", "export", entry);
 			return (1);
 		}
 		i++;
@@ -140,6 +138,8 @@ int	ft_export(char **argv, char ***env)
 				ft_setenv(env, entry[0], entry[1]);
 				ft_free_strarr(entry);
 			}
+			else
+				return (1);
 			i++;
 		}
 	}

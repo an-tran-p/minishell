@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 23:30:29 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/15 23:18:45 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,6 @@ typedef struct s_step
 	struct s_step	*next;
 }					t_step;
 
-typedef struct s_del
-{
-	struct s_step	**head;
-	char			***env;
-}					t_del;
-
-typedef struct s_pipe
-{
-	int				fds[2];
-	int				prev_fd;
-	pid_t			pid;
-}					t_pipe;
-
 int					is_builtins(char *argv);
 void				execute_builtin_in_child(char **argv, char ***env,
 						t_step *step, int pipe_fd);
@@ -99,6 +86,7 @@ int					ft_env(char **argv, char **env);
 int					check_valid_id(char *entry, char c);
 int					ft_unset(char **argv, char ***env);
 int					export_print(char **env);
+int					ft_exit(char **argv, char **env, t_step *step);
 
 char				*ft_getenv(char **env, char *key);
 char				**copy_env(char **envp);
@@ -113,7 +101,7 @@ void				handle_rd(t_step *st, t_step *step, char **env);
 int					have_infile(t_token *redirection);
 int					have_outfile(t_token *redirection);
 char				*find_path(char *cmd, char **envp);
-void				ft_put_err(char *err_msg, char *para);
+void				ft_put_err(char *err_msg, char *para, char *value);
 int					create_processes(t_step *step, char **env);
 int					execute_single_cmd(t_step *step, char ***env);
 void				execute(char **cmd, char **env, t_step *step);

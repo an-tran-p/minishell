@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/05/19 21:31:25 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/15 22:56:28 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ int	ft_cd(char **argv, char **env)
 	getcwd(old_pwd, PATH_MAX);
 	if (chdir(path) != 0)
 	{
-		ft_printf("minishell: cd: %s: ", argv[1]);
-		perror("");
+		ft_put_err(strerror(errno), "cd", path);
 		return (1);
 	}
 	ft_setenv(&env, "OLDPWD=", old_pwd);

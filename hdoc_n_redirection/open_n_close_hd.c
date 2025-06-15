@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 23:25:13 by atran             #+#    #+#             */
-/*   Updated: 2025/06/15 00:06:36 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/15 23:45:46 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	close_hd(t_step *step)
 	t_step	*st;
 
 	st = step;
-	fprintf(stderr, "I am closing all hd_fd\n");
 	while (st)
 	{
 		if (st->hd_fd != -1 && st->hd_fd != -2)

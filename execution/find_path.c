@@ -6,15 +6,22 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 16:25:59 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 23:10:15 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/15 22:51:50 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_put_err(char *err_msg, char *para)
+void	ft_put_err(char *err_msg, char *para, char *value)
 {
+	write(STDERR_FILENO, "minishell: ", ft_strlen("minishell: "));
 	write(STDERR_FILENO, para, strlen(para));
+	write(STDERR_FILENO, ": ", ft_strlen(": "));
+	if (value)
+	{
+		write(STDERR_FILENO, value, strlen(value));
+		write(STDERR_FILENO, ": ", ft_strlen(": "));
+	}
 	write(STDERR_FILENO, err_msg, strlen(err_msg));
 	write(STDERR_FILENO, "\n", 1);
 }

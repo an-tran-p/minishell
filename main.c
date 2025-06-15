@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/14 23:15:48 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/16 00:04:40 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,12 @@ void	minishell(int status, char *line, t_step *step, char **envp)
 		{
 			add_history(line);
 			status = parser(line, &step, env);
-			exit_status(status, true);
+			// exit_status(status, true);
 			if (step)
 				status = shell_execution(&step, &env);
 			free(line);
 			line = NULL;
 			exit_status(status, true);
-			fprintf(stderr, "I am exiting now\n");
 			printf("%d %s\n", status, line);
 		}
 	}

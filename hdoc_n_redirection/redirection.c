@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/15 00:17:32 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/15 22:29:04 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	handle_infile(t_token *redirection, t_step *step, char **env)
 			fd_in = open(rd->s, O_RDONLY);
 			if (fd_in == -1)
 			{
-				ft_printf("minishell: %s: %s\n", strerror(errno), rd->s);
+				ft_put_err(strerror(errno), rd->s, NULL);
 				ft_free_eve(step, env);
 				exit(1);
 			}
@@ -96,7 +96,7 @@ void	handle_outfile(t_token *redirection, t_step *step, char **env)
 				fd_out = open(rd->s, O_WRONLY | O_CREAT | O_APPEND, 0777);
 			if (fd_out == -1)
 			{
-				ft_printf("%s: %s\n", strerror(errno), rd->s);
+				ft_put_err(strerror(errno), rd->s, NULL);
 				ft_free_eve(step, env);
 				exit(1);
 			}

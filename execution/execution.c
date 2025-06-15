@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 23:56:59 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/15 23:38:11 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	execute(char **cmd, char **env, t_step *step)
 	path = find_path(cmd[0], env);
 	if (!path)
 	{
-		ft_put_err(" :command not found", cmd[0]);
+		ft_put_err("command not found", cmd[0], NULL);
 		ft_free_eve(step, env);
 		exit(127);
 	}
@@ -77,10 +77,7 @@ void	exec_single_cmd_child(t_step *step, char ***env)
 	if (step->cmd && is_builtins(step->cmd[0]))
 		execute_builtin_in_child(step->cmd, env, step, -1);
 	else if (step->cmd && is_builtins(step->cmd[0]) == 0)
-	{
-		fprintf(stderr, "I am executing cat\n");
 		execute(step->cmd, *env, step);
-	}
 }
 
 int	execute_single_cmd(t_step *step, char ***env)
@@ -90,7 +87,10 @@ int	execute_single_cmd(t_step *step, char ***env)
 
 	status = 0;
 	if (step->cmd && is_builtins(step->cmd[0]) && !step->rd)
+	{
 		status = execute_builtin_in_parent(step->cmd, env, step, -1);
+		return (status);
+	}
 	else
 	{
 		pid = fork();
