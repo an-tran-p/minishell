@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/15 23:18:45 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/17 17:48:42 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <string.h>
@@ -109,6 +110,8 @@ void				ft_free_eve(t_step *step, char **env);
 void				close_hd(t_step *step);
 
 int					ft_printf(const char *str, ...);
+
+void				handling_sigint(int sig);
 
 int					exit_status(int new_s, bool add);
 

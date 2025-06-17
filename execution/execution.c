@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/15 23:38:11 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/17 18:07:09 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int	have_outfile(t_token *redirection)
 
 void	exec_single_cmd_child(t_step *step, char ***env)
 {
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (step->rd)
 		handle_rd(step, step, *env);
 	if (step->cmd && is_builtins(step->cmd[0]))

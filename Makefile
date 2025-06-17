@@ -6,13 +6,13 @@
 #    By: atran <atran@student.hive.fi>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/06 17:50:04 by atran             #+#    #+#              #
-#    Updated: 2025/06/15 23:20:33 by atran            ###   ########.fr        #
+#    Updated: 2025/06/17 17:55:56 by atran            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS =  main.c \
+SRCS =  main.c signal.c\
 		execution/envp.c execution/exec_pipe.c execution/execution.c \
 		execution/find_path.c execution/free_mem.c\
 		builtins/pwd.c builtins/echo.c builtins/cd.c builtins/exit.c \

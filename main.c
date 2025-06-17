@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/16 14:03:19 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/17 17:50:56 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ void	minishell(int status, char *line, t_step *step, char **envp)
 			printf("%d %s\n", status, line);
 		}
 	}
+	rl_clear_history();
+	ft_free_strarr(env);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -90,6 +92,8 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	signal(SIGINT, handling_sigint);
+	signal(SIGQUIT, SIG_IGN);
 	step = NULL;
 	line = NULL;
 	status = 0;

@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/16 22:08:46 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/17 18:13:54 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	execute_child_process(int *fds, int prev_fd, t_step *st, t_step *step,
 	if (st->cmd)
 		fprintf(stderr, "PID: %d executing command: %s\n", getpid(),
 			st->cmd[0]);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (prev_fd != -1 && !have_infile(st->rd) && st->hd_fd < 0)
 		dup2(prev_fd, STDIN_FILENO);
 	if (st->pipe && !have_outfile(st->rd))
