@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 14:22:19 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/10 20:30:27 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/18 15:26:52 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	m_err_exit_token(t_token **head)
 {
 	tk_lstclear(head);
-	ft_putstr_fd("Memory allocation failed\n", 2);
+	ft_putstr_fd("Memory allocation failed.\n", 2);
 	exit(EXIT_FAILURE);
 }
 

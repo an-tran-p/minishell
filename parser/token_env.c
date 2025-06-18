@@ -81,7 +81,10 @@ int	token_env(t_token **cur, int *i, int rd, char **env)
 	t_env	data;
 
 	token_get_env(&(*cur)->s, i, &data, env);
-	if (data.m_err || !data.j || !data.expand || !data.expand[0])
+	if (!data.j)
+		return(data.m_err);
+//need to check when data.m_err has a value.
+	if (data.m_err || !data.expand || !data.expand[0])
 	{
 		if (!data.expand || !data.expand[0])
 		{
@@ -95,7 +98,6 @@ int	token_env(t_token **cur, int *i, int rd, char **env)
 				else
 				(*cur)->type = DEL;
 			}
-			ft_memcpy((*cur)->s + (*i), data.tmp, data.len_tmp + 1);
 			(*i)--;
 		}
 /*

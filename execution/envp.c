@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/06/14 23:10:10 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 19:03:01 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,11 @@ int	ft_setenv(char ***env, char *k, char *n_value)
 		}
 		else if (ft_strncmp((*env)[i], k, ft_strchr((*env)[i], '=')
 				- (*env)[i]) == 0 && !ft_strchr(k, '='))
+		{
+			ft_free_str(&(*env)[i]);
+			(*env)[i] = new_entry;
 			return (0);
+		}
 	}
 	*env = realloc_env(*env, 1);
 	if (!(*env))

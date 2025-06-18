@@ -6,11 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/17 17:50:56 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 17:35:24 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern volatile sig_atomic_t	heredoc_interrupted;
 
 int	exit_status(int new_s, bool add)
 {
@@ -46,7 +48,14 @@ int	shell_execution(t_step **step, char ***env)
 
 	status = 0;
 	initialize_hd_fd(*step);
-	handle_heredoc(*step, *env);
+	if (handle_heredoc(*step, *env) == -3)
+	{
+		st_lstclear(step);
+		heredoc_interrupted = 0;
+		rl_catch_signals = 1;
+		status = 130;
+		return (status);
+	}
 	if ((*step)->pipe)
 		status = create_processes(*step, *env);
 	else if (!((*step)->pipe))

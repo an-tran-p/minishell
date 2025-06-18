@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_env_space.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/18 12:57:29 by ji-hong           #+#    #+#             */
+/*   Updated: 2025/06/18 12:57:58 by ji-hong          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "tokenizer.h"
 
 static void	token_env_space_1(t_token **cur, int *i, t_env *data)
@@ -51,10 +63,6 @@ static void	token_env_space_2(t_token **cur, t_env *data)
 		data->m_err = tk_appendfront(cur, data->s);
 		if (data->m_err)
 			return ;
-/*
-		if (data->var[0])
-			data->var += data->j - 1;
-*/
 	}
 }
 

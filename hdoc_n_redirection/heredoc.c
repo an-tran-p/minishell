@@ -6,11 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/15 23:41:16 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 17:34:41 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+extern volatile sig_atomic_t	heredoc_interrupted;
 
 int	count_hdoc(t_token *redirection)
 {
@@ -30,13 +32,21 @@ int	count_hdoc(t_token *redirection)
 	return (num);
 }
 
-void	heredoc_to_skip(char *delimeter)
+int	heredoc_to_skip(char *delimeter)
 {
 	char	*line;
 
+	signal(SIGINT, handling_sigint_heredoc);
 	while (1)
 	{
 		line = readline("> ");
+		if (heredoc_interrupted)
+		{
+			ft_free_str(&line);
+			fprintf(stderr, "I am here");
+			signal(SIGINT, handling_sigint);
+			return (-3);
+		}
 		if (!line)
 			break ;
 		if (ft_strcmp(line, delimeter) == 0)
@@ -46,6 +56,7 @@ void	heredoc_to_skip(char *delimeter)
 		}
 		free(line);
 	}
+	return (0);
 }
 
 int	last_heredoc(t_token *rd, char **env)
@@ -55,9 +66,24 @@ int	last_heredoc(t_token *rd, char **env)
 
 	if (pipe(fd) == -1)
 		return (-1);
+	rl_catch_signals = 0;
+	signal(SIGINT, handling_sigint_heredoc);
+	heredoc_interrupted = 0;
 	while (1)
 	{
 		line = readline("> ");
+		fprintf(stderr, "out of condition: heredoc_interupted is %d\n",
+			heredoc_interrupted);
+		if (heredoc_interrupted)
+		{
+			fprintf(stderr, "heredoc_interupted is %d\n", heredoc_interrupted);
+			close(fd[0]);
+			close(fd[1]);
+			ft_free_str(&line);
+			fprintf(stderr, "I am trying to end heredoc\n");
+			signal(SIGINT, handling_sigint);
+			return (-3);
+		}
 		if (!line || ft_strcmp(line, rd->s) == 0)
 		{
 			ft_free_str(&line);
@@ -91,7 +117,10 @@ int	heredoc_in_step(t_token *redirection, char **env)
 		{
 			hd_num--;
 			if (hd_num > 0)
-				heredoc_to_skip(rd->s);
+			{
+				if (heredoc_to_skip(rd->s) == -3)
+					return (-3);
+			}
 			else if (hd_num == 0)
 			{
 				fd_in = last_heredoc(rd, env);
@@ -104,27 +133,30 @@ int	heredoc_in_step(t_token *redirection, char **env)
 	return (fd_in);
 }
 
-void	handle_heredoc(t_step *step, char **env)
+int	handle_heredoc(t_step *step, char **env)
 {
 	t_step	*st;
 
 	st = step;
 	if (!st)
-		return ;
+		return (0);
 	while (st)
 	{
 		st->hd_fd = heredoc_in_step(st->rd, env);
-		if (st->hd_fd == -1)
+		if (st->hd_fd == -1 || st->hd_fd == -3)
 		{
 			st = step;
 			while (st)
 			{
-				if (st->hd_fd != -2 && st->hd_fd != -1)
+				if (st->hd_fd >= 0)
 					close(st->hd_fd);
 				st = st->next;
 			}
-			return ;
+			if (st->hd_fd == -3)
+				return (-3);
+			return (0);
 		}
 		st = st->next;
 	}
+	return (0);
 }

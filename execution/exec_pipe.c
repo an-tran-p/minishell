@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/17 18:13:54 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 16:08:04 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ void	execute_child_process(int *fds, int prev_fd, t_step *st, t_step *step,
 	close_hd(step);
 	if (st->cmd && is_builtins(st->cmd[0]))
 		execute_builtin_in_child(st->cmd, &env, step, fds[0]);
-	execute(st->cmd, env, step);
+	if (st->cmd && !is_builtins(st->cmd[0]))
+		execute(st->cmd, env, step);
 }
 
 void	parent_process(int *prev_fd, int fds[2], t_step *st, pid_t pid)

@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/17 17:48:42 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 16:30:26 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int					ft_setenv(char ***env, char *key, char *n_value);
 char				**realloc_env(char **env, int add);
 
 void				initialize_hd_fd(t_step *step);
-void				handle_heredoc(t_step *step, char **env);
+int					handle_heredoc(t_step *step, char **env);
 void				close_hd(t_step *step);
 void				handle_rd(t_step *st, t_step *step, char **env);
 
@@ -112,6 +112,7 @@ void				close_hd(t_step *step);
 int					ft_printf(const char *str, ...);
 
 void				handling_sigint(int sig);
+void				handling_sigint_heredoc(int sig);
 
 int					exit_status(int new_s, bool add);
 

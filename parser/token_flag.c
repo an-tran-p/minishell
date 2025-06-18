@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/12 22:17:27 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/18 12:57:07 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,6 @@ int	token_flag(t_token **head, t_token *cur, int rd, char **env)
 			err = token_env(&cur, &i, rd, env);
 			if (err == -1)
 				m_err_exit_token(head);
-			/*
-						else if (err == 1)
-						{
-							err = synerr_rd(head, cur->s);
-							return (err);
-						}
-			*/
 		}
 		i++;
 	}

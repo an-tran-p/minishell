@@ -6,20 +6,11 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/13 14:45:36 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/18 13:43:35 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
-
-int	type_isrd(t_etype type)
-{
-	if (type == RD_INFILE || type == RD_HEREDOC || type == RD_OUTFILE
-		|| type == RD_APPEND || type == RD_HDQUOTE || type == RD_ERR)
-		return (1);
-	else
-		return (0);
-}
 
 static void	token_flag_heredoc(t_token *cur, char **env)
 {
@@ -39,6 +30,24 @@ static void	token_flag_heredoc(t_token *cur, char **env)
 	cur = cur->next;
 }
 
+static int	token_flag_rd_err(t_token **head, t_token *tmp)
+{
+	t_token	*p;
+
+	if (tmp->next->type == RD_ERR)
+	{
+		tmp->type = RD_ERR;
+		free(tmp->s);
+		tmp->s = tmp->next->s;
+		p = tmp->next;
+		tmp->next = tmp->next->next;
+		free(p);
+		synerr_rd(head, tmp->s);
+		return (2);
+	}
+	return (0);
+}
+
 static int	chk_rd_err(t_token **head, t_token *tmp, char **env)
 {
 	int	exit_no;
@@ -54,25 +63,14 @@ static int	chk_rd_err(t_token **head, t_token *tmp, char **env)
 		if (tmp->type == RD_HEREDOC)
 			token_flag_heredoc(tmp, env);
 		else
-//expand check ' ': RD_ERR
 		{
 			exit_no = token_flag(head, tmp->next, 1, env);
-			if(tmp->next->type == RD_ERR)
-			{
-				tmp->type= RD_ERR;
-				free(tmp->s);
-				tmp->s= tmp->next->s;
-				t_token *p;
-				p = tmp->next;
-				tmp->next= tmp->next->next;
-				free(p);
-				synerr_rd(head, tmp->s);
-				return(2);
-			}
+			exit_no = token_flag_rd_err(head, tmp);
+			if (exit_no)
+				return (2);
 			tmp = tmp->next;
 		}
 	}
-printf("exit_no_%d\n", exit_no);
 	return (exit_no);
 }
 
@@ -86,14 +84,14 @@ static t_token	*chk_tokens_loop(t_token **head, int *exit_no, char **env)
 		if (tmp->type == WORD_F)
 		{
 			*exit_no = token_flag(head, tmp, 0, env);
-			if(!(*exit_no) && tmp->type != DEL)
+			if (!(*exit_no) && tmp->type != DEL)
 				tmp->type = WORD;
 		}
 		else if (type_isrd(tmp->type))
 		{
 			*exit_no = chk_rd_err(head, tmp, env);
 			if (*exit_no)
-				return (NULL) ;
+				return (NULL);
 			free(tmp->s);
 			tmp->s = tmp->next->s;
 			tmp->next->s = NULL;
@@ -101,7 +99,7 @@ static t_token	*chk_tokens_loop(t_token **head, int *exit_no, char **env)
 		}
 		else if (tmp->type == PIPE && tmp->next->type == PIPE)
 		{
-			*exit_no=token_synerr(head, tmp->s);
+			*exit_no = token_synerr(head, tmp->s);
 			return (NULL);
 		}
 		tmp = tmp->next;
@@ -131,7 +129,7 @@ int	chk_tokens(t_token **head, char **env)
 	else if (tmp && tmp->type == WORD_F)
 	{
 		token_flag(head, tmp, 0, env);
-		if(tmp->type != DEL)
+		if (tmp->type != DEL)
 			tmp->type = WORD;
 	}
 	return (exit_no);

@@ -6,11 +6,20 @@
 /*   By: ji-hong <ji-hong@student.hive.fi           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:49:00 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/06 18:35:58 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/18 13:36:00 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
+
+int	type_isrd(t_etype type)
+{
+	if (type == RD_INFILE || type == RD_HEREDOC || type == RD_OUTFILE
+		|| type == RD_APPEND || type == RD_HDQUOTE || type == RD_ERR)
+		return (1);
+	else
+		return (0);
+}
 
 int	ft_isspace(int c)
 {
