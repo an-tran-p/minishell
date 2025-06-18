@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/06/18 22:08:17 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 22:09:43 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ char	*get_new_entry(size_t *len, char *k, char *n_value)
 
 int	ft_setenv(char ***env, char *k, char *n_value)
 {
-	char *new_entry;
-	int i;
-	size_t len;
+	char	*new_entry;
+	int		i;
+	size_t	len;
 
 	new_entry = get_new_entry(&len, k, n_value);
 	if (!new_entry)
@@ -69,73 +69,74 @@ int	ft_setenv(char ***env, char *k, char *n_value)
 		(*env)[i] = new_entry;
 		return (0);
 	}
+}
 
-	char *ft_getenv(char **env, char *key)
+char	*ft_getenv(char **env, char *key)
+{
+	int		i;
+	size_t	len;
+
+	i = 0;
+	len = ft_strlen(key);
+	while (env[i])
 	{
-		int i;
-		size_t len;
-
-		i = 0;
-		len = ft_strlen(key);
-		while (env[i])
+		if (ft_strncmp(env[i], key, len) == 0 && env[i][len] == '=')
 		{
-			if (ft_strncmp(env[i], key, len) == 0 && env[i][len] == '=')
-			{
-				if (env[i][len + 1])
-					return (env[i] + len + 1);
-			}
-			i++;
+			if (env[i][len + 1])
+				return (env[i] + len + 1);
 		}
+		i++;
+	}
+	return (NULL);
+}
+
+char	**copy_env(char **envp)
+{
+	int		i;
+	char	**env;
+
+	i = 0;
+	if (!envp)
 		return (NULL);
-	}
-
-	char **copy_env(char **envp)
+	while (envp[i])
+		i++;
+	env = malloc(sizeof(char *) * (i + 1));
+	if (!env)
+		return (NULL);
+	i = 0;
+	while (envp[i])
 	{
-		int i;
-		char **env;
-
-		i = 0;
-		if (!envp)
-			return (NULL);
-		while (envp[i])
-			i++;
-		env = malloc(sizeof(char *) * (i + 1));
-		if (!env)
-			return (NULL);
-		i = 0;
-		while (envp[i])
+		env[i] = ft_strdup(envp[i]);
+		if (!env[i])
 		{
-			env[i] = ft_strdup(envp[i]);
-			if (!env[i])
-			{
-				ft_free_strarr(env);
-				return (NULL);
-			}
-			i++;
+			ft_free_strarr(env);
+			return (NULL);
 		}
-		env[i] = NULL;
-		return (env);
+		i++;
 	}
+	env[i] = NULL;
+	return (env);
+}
 
-	char **realloc_env(char **env, int add)
+char	**realloc_env(char **env, int add)
+{
+	int		i;
+	char	**new_env;
+
+	i = 0;
+	while (env[i])
+		i++;
+	new_env = malloc(sizeof(char *) * (i + 1 + add));
+	if (!new_env)
+		return (NULL);
+	i = 0;
+	while (env[i])
 	{
-		int i;
-		char **new_env;
-
-		i = 0;
-		while (env[i])
-			i++;
-		new_env = malloc(sizeof(char *) * (i + 1 + add));
-		if (!new_env)
-			return (NULL);
-		i = 0;
-		while (env[i])
-		{
-			new_env[i] = env[i];
-			i++;
-		}
-		new_env[i] = NULL;
-		new_env[i + 1] = NULL;
-		free(env);
-		return (new_env);
+		new_env[i] = env[i];
+		i++;
 	}
+	new_env[i] = NULL;
+	new_env[i + 1] = NULL;
+	free(env);
+	return (new_env);
+}
