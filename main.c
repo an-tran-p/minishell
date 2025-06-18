@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/18 17:35:24 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 21:19:50 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ void	minishell(int status, char *line, t_step *step, char **envp)
 			free(line);
 			line = NULL;
 			exit_status(status, true);
-			printf("%d %s\n", status, line);
 		}
 	}
 	rl_clear_history();

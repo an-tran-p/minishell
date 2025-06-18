@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/15 22:56:28 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 20:26:49 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	ft_cd(char **argv, char **env)
 	char	cur_pwd[PATH_MAX];
 
 	if (!argv[1])
+		path = ft_getenv(env, "HOME");
+	else if (ft_strncmp(argv[1], "~", 2) == 0)
 		path = ft_getenv(env, "HOME");
 	else if (ft_strncmp(argv[1], "-", 2) == 0)
 		path = ft_getenv(env, "OLDPWD");

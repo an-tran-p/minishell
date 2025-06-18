@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 16:25:59 by atran             #+#    #+#             */
-/*   Updated: 2025/06/15 22:51:50 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 21:25:23 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ char	*find_path(char *cmd, char **envp)
 	char	*path;
 
 	i = 0;
+	if (!cmd || !cmd[0])
+		return (NULL);
 	while (envp[i] && ft_strnstr(envp[i], "PATH", 4) == 0)
 		i++;
 	if (!envp[i])

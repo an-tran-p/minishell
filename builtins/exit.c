@@ -45,7 +45,7 @@ int	ft_exit(char **argv, char **env, t_step *step)
 		}
 		else if (is_number(argv[1]) && argv[2])
 		{
-			ft_put_err("too many argument", "exit", NULL);
+			ft_put_err("too many arguments", "exit", NULL);
 			return (1);
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/17 18:07:09 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/18 21:30:47 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,11 @@ void	execute(char **cmd, char **env, t_step *step)
 		ft_free_eve(step, env);
 		exit(0);
 	}
-	path = find_path(cmd[0], env);
-	if (!path)
+	if (!access(cmd[0], X_OK))
+		path = cmd[0];
+	else
+		path = find_path(cmd[0], env);
+	if (!path || !path[0])
 	{
 		ft_put_err("command not found", cmd[0], NULL);
 		ft_free_eve(step, env);
