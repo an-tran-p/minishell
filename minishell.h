@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/18 16:30:26 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/19 21:25:18 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
 # endif
+
+# define SIGINT_NONE 0
+# define SIGINT_READLINE 1
+# define SIGINT_CHILD 2
 
 typedef struct s_env
 {
@@ -80,7 +84,7 @@ void				execute_builtin_in_child(char **argv, char ***env,
 int					execute_builtin_in_parent(char **argv, char ***env,
 						t_step *step, int pipe_fd);
 int					ft_echo(char **argv);
-int					ft_pwd(void);
+int					ft_pwd(char **env);
 int					ft_cd(char **argv, char **env);
 int					ft_export(char **argv, char ***env);
 int					ft_env(char **argv, char **env);
@@ -111,7 +115,8 @@ void				close_hd(t_step *step);
 
 int					ft_printf(const char *str, ...);
 
-void				handling_sigint(int sig);
+void				sigint_parent_handler(int sig);
+void				sigint_child_handler(int sig);
 void				handling_sigint_heredoc(int sig);
 
 int					exit_status(int new_s, bool add);

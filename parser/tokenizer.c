@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/18 12:48:33 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/19 20:31:07 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,34 @@ int	tokenizer(t_token **head, char *s)
 	if (line.exit_no)
 		return (line.exit_no);
 	return (0);
+}
+
+int	chk_tokens(t_token **head, char **env)
+{
+	int		exit_no;
+	t_token	*tmp;
+
+	exit_no = 0;
+	tmp = *head;
+	if (tmp->type == PIPE)
+	{
+		exit_no = token_synerr(head, "|");
+		return (exit_no);
+	}
+	tmp = chk_tokens_loop(head, &exit_no, env);
+	if (!tmp)
+		return (exit_no);
+	if (tmp && (tmp->type == PIPE || type_isrd(tmp->type)))
+	{
+		exit_no = token_synerr(head, "newline");
+	}
+	else if (tmp && tmp->type == WORD_F)
+	{
+		token_flag(head, tmp, 0, env);
+		if (tmp->type != DEL)
+			tmp->type = WORD;
+	}
+	return (exit_no);
 }
 
 int	parser(char *s, t_step **lst, char **env)

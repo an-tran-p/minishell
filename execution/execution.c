@@ -6,11 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/18 21:30:47 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/19 21:35:46 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+extern volatile sig_atomic_t	sigint;
 
 void	execute(char **cmd, char **env, t_step *step)
 {
@@ -105,8 +107,12 @@ int	execute_single_cmd(t_step *step, char ***env)
 			exec_single_cmd_child(step, env);
 		else
 			waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status))
+			status = WTERMSIG(status) + 128;
+		else
+			status = WEXITSTATUS(status);
 	}
-	if (step->hd_fd != -2 && step->hd_fd != -1 && step->hd_fd)
-		close(step->hd_fd);
-	return (WEXITSTATUS(status));
+	fprintf(stderr, "signal caught after execution is %d\n", sigint);
+	close_hd(step);
+	return (status);
 }

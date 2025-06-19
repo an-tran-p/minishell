@@ -6,13 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/18 21:51:14 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/19 20:52:44 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-extern volatile sig_atomic_t	heredoc_interrupted;
+extern volatile sig_atomic_t	sigint;
 
 int	count_hdoc(t_token *redirection)
 {
@@ -40,11 +40,11 @@ int	heredoc_to_skip(char *delimeter)
 	while (1)
 	{
 		line = readline("> ");
-		if (heredoc_interrupted)
+		if (sigint)
 		{
 			ft_free_str(&line);
 			fprintf(stderr, "I am here");
-			signal(SIGINT, handling_sigint);
+			signal(SIGINT, sigint_parent_handler);
 			return (-3);
 		}
 		if (!line)
@@ -68,20 +68,19 @@ int	last_heredoc(t_token *rd, char **env)
 		return (-1);
 	rl_catch_signals = 0;
 	signal(SIGINT, handling_sigint_heredoc);
-	heredoc_interrupted = 0;
+	sigint = 0;
 	while (1)
 	{
 		line = readline("> ");
-		fprintf(stderr, "out of condition: heredoc_interupted is %d\n",
-			heredoc_interrupted);
-		if (heredoc_interrupted)
+		fprintf(stderr, "out of condition: heredoc_interupted is %d\n", sigint);
+		if (sigint)
 		{
-			fprintf(stderr, "heredoc_interupted is %d\n", heredoc_interrupted);
+			fprintf(stderr, "heredoc_interupted is %d\n", sigint);
 			close(fd[0]);
 			close(fd[1]);
 			ft_free_str(&line);
 			fprintf(stderr, "I am trying to end heredoc\n");
-			signal(SIGINT, handling_sigint);
+			signal(SIGINT, sigint_parent_handler);
 			return (-3);
 		}
 		if (!line || ft_strcmp(line, rd->s) == 0)
@@ -160,3 +159,25 @@ int	handle_heredoc(t_step *step, char **env)
 	}
 	return (0);
 }
+
+/* int	last_herdoc(t_token *rd, char **env)
+{
+	int		fd[2];
+	char	*line;
+	pid_t	pid;
+	int		status;
+
+	if (pipe(fd) == -1)
+		return (-1);
+	pid = fork();
+	if (pid == -1)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		return (-1);
+	}
+	if (pid == 0)
+	{
+
+	}
+} */

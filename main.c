@@ -6,13 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/18 21:19:50 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/19 21:38:16 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern volatile sig_atomic_t	heredoc_interrupted;
+extern volatile sig_atomic_t	sigint;
 
 int	exit_status(int new_s, bool add)
 {
@@ -51,7 +51,7 @@ int	shell_execution(t_step **step, char ***env)
 	if (handle_heredoc(*step, *env) == -3)
 	{
 		st_lstclear(step);
-		heredoc_interrupted = 0;
+		sigint = 0;
 		rl_catch_signals = 1;
 		status = 130;
 		return (status);
@@ -100,7 +100,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	signal(SIGINT, handling_sigint);
+	signal(SIGINT, sigint_parent_handler);
 	signal(SIGQUIT, SIG_IGN);
 	step = NULL;
 	line = NULL;

@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/15 22:29:04 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/19 19:26:44 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,14 @@ int	infile_last(t_token *redirection)
 	return (flag);
 }
 
-void	handle_infile(t_token *redirection, t_step *step, char **env)
+void	handle_infile(t_step *st, t_step *step, char **env)
 {
 	int		fd_in;
 	t_token	*rd;
 	int		inf_num;
 
-	rd = redirection;
-	inf_num = count_infile(redirection);
+	rd = st->rd;
+	inf_num = count_infile(st->rd);
 	while (rd)
 	{
 		if (rd->type == RD_INFILE)
@@ -70,7 +70,7 @@ void	handle_infile(t_token *redirection, t_step *step, char **env)
 				ft_free_eve(step, env);
 				exit(1);
 			}
-			else if (inf_num == 0 && infile_last(redirection) == 1)
+			else if (inf_num == 0 && infile_last(st->rd) == 1 && st->cmd)
 				dup2(fd_in, STDIN_FILENO);
 			close(fd_in);
 		}
@@ -78,14 +78,12 @@ void	handle_infile(t_token *redirection, t_step *step, char **env)
 	}
 }
 
-void	handle_outfile(t_token *redirection, t_step *step, char **env)
+void	handle_outfile(t_step *st, t_step *step, char **env)
 {
 	int		fd_out;
 	t_token	*rd;
 
-	rd = redirection;
-	if (!rd)
-		return ;
+	rd = st->rd;
 	while (rd)
 	{
 		if (rd->type == RD_OUTFILE || rd->type == RD_APPEND)
@@ -100,7 +98,8 @@ void	handle_outfile(t_token *redirection, t_step *step, char **env)
 				ft_free_eve(step, env);
 				exit(1);
 			}
-			dup2(fd_out, STDOUT_FILENO);
+			if (st->cmd)
+				dup2(fd_out, STDOUT_FILENO);
 			close(fd_out);
 		}
 		rd = rd->next;
@@ -120,8 +119,8 @@ void	handle_rd(t_step *st, t_step *step, char **env)
 		dup2(st->hd_fd, STDIN_FILENO);
 		close(st->hd_fd);
 	}
-	handle_infile(st->rd, step, env);
-	handle_outfile(st->rd, step, env);
+	handle_infile(st, step, env);
+	handle_outfile(st, step, env);
 	temp = step;
 	while (temp)
 	{

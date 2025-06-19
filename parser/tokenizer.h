@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:29:22 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/12 20:22:51 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/19 20:31:22 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	st_lstprint(t_step *lst);
 void	st_lstclear(t_step **lst);
 
 int		type_isrd(t_etype type);
-int		chk_tokens(t_token **head, char **env);
+t_token	*chk_tokens_loop(t_token **head, int *exit_no, char **env);
 
 int		token_quote(char **str, int *i, int heredoc, char **env);
 int		token_flag(t_token **head, t_token *cur, int rd, char **env);

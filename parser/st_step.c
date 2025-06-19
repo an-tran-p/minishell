@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/18 15:27:34 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/19 20:09:33 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	st_lstprint(t_step *lst)
 {
 	int	i;
 
+	printf("------------------\n");
 	while (lst)
 	{
 		printf("pipe: %d\n", lst->pipe);
@@ -66,7 +67,7 @@ void	st_lstprint(t_step *lst)
 				printf(" - ");
 			i ++;
 		}
-		printf("\n\n");
+		printf("\n------------------\n");
 		lst = lst->next;
 	}
 }
