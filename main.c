@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/19 21:38:16 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/20 16:51:44 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,39 +23,13 @@ int	exit_status(int new_s, bool add)
 	return (status);
 }
 
-// void	readline_err(char *line, int status, char **env)
-// {
-// 	// memory failure? or end program
-// 	(void)env;
-// 	(void)status;
-// 	fprintf(stderr, "I am in rl_eer");
-// 	if (!line)
-// 	{
-// 		/* ft_free_strarr(env); */
-// 		fprintf(stderr, "I am in rl_eer ENONEM");
-// 		/* if (errno == ENOMEM)
-// 		{
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		else */
-// 		return ; //(status);
-// 	}
-// }
-
 int	shell_execution(t_step **step, char ***env)
 {
 	int	status;
 
 	status = 0;
 	initialize_hd_fd(*step);
-	if (handle_heredoc(*step, *env) == -3)
-	{
-		st_lstclear(step);
-		sigint = 0;
-		rl_catch_signals = 1;
-		status = 130;
-		return (status);
-	}
+	handle_heredoc(*step, *env);
 	if ((*step)->pipe)
 		status = create_processes(*step, *env);
 	else if (!((*step)->pipe))
@@ -107,36 +81,3 @@ int	main(int argc, char **argv, char **envp)
 	status = 0;
 	minishell(status, line, step, envp);
 }
-/*
-int	main(int argc, char **argv, char **envp)
-{
-	int		status;
-	char	*line;
-	char	**env;
-	t_step	*step;
-
-	(void)argc;
-	(void)argv;
-	env = copy_env(envp);
-	if (!env)
-		return (EXIT_FAILURE);
-	step = NULL;
-	status = 0;
-	while (1)
-	{
-		line = readline("minishell% ");
-		if (!line)
-			readline_err(line, status, env);
-		if (line[0])
-		{
-			add_history(line);
-			status = parser(line, &step);
-free(line);
-line = NULL;
-printf("%d %s\n", status, line);
-			if (!step)
-				status = shell_execution(&step, env);
-		}
-	}
-}
-*/

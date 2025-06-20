@@ -6,11 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/19 19:12:14 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/20 16:40:23 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+extern volatile sig_atomic_t	sigint;
 
 int	process_wait(pid_t pid, int i)
 {
@@ -111,9 +113,11 @@ int	create_processes(t_step *step, char **env)
 		pid = fork();
 		if (pid == -1)
 			break ;
+		sigint = SIGINT_CHILD;
 		if (pid == 0)
 			execute_child_process(fds, prev_fd, st, step, env);
 		parent_process(&prev_fd, fds, st, pid);
+		sigint = SIGINT_NONE;
 		st = st->next;
 		i++;
 	}

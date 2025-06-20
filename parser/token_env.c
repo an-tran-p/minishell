@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:28:04 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/19 20:06:55 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/20 16:09:09 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ int	token_env(t_token **cur, int *i, int rd, char **env)
 				else
 					(*cur)->type = DEL;
 			}
+		ft_memcpy((*cur)->s + (*i), data.tmp, data.len_tmp + 1);
 			(*i)--;
 		}
 		return (data.m_err);
