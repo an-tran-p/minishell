@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/22 23:01:47 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/22 23:45:16 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,7 @@ int	execute_single_cmd(t_step *step, char ***env)
 
 	status = 0;
 	if (step->cmd && is_builtins(step->cmd[0]) && !step->rd)
-	{
-		status = execute_builtin_in_parent(step->cmd, env, step, -1);
-		return (status);
-	}
+		return (execute_builtin_in_parent(step->cmd, env, step, -1));
 	else
 	{
 		pid = fork();
@@ -114,6 +111,5 @@ int	execute_single_cmd(t_step *step, char ***env)
 			status = WEXITSTATUS(status);
 		g_sigint = SIGINT_NONE;
 	}
-	close_hd(step);
 	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/22 23:21:03 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/23 00:06:01 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,42 @@ int	count_hdoc(t_token *redirection)
 	return (num);
 }
 
-int	heredoc_to_skip(char *delimeter, char **env, t_step *step)
+void	ft_put_warning_eof(char *s)
+{
+	ft_putstr_fd("minishell: warning: ", 2);
+	ft_putstr_fd("here-document delimited by end-of-file ", 2);
+	ft_putstr_fd("(wanted '", 2);
+	ft_putstr_fd(s, 2);
+	ft_putstr_fd("')\n", 2);
+}
+
+void	heredoc_to_skip_child(char *delimeter, char **env, t_step *step)
 {
 	char	*line;
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			ft_put_warning_eof(delimeter);
+			break ;
+		}
+		if (ft_strcmp(line, delimeter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		free(line);
+	}
+	ft_free_eve(step, env);
+	exit(0);
+}
+
+int	heredoc_to_skip(char *delimeter, char **env, t_step *step)
+{
 	pid_t	pid;
 	int		status;
 
@@ -43,31 +76,7 @@ int	heredoc_to_skip(char *delimeter, char **env, t_step *step)
 		return (-1);
 	g_sigint = SIGINT_HEREDOC;
 	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_IGN);
-		while (1)
-		{
-			line = readline("> ");
-			if (!line)
-			{
-				ft_putstr_fd("minishell: warning: ", 2);
-				ft_putstr_fd("here-document delimited by end-of-file ", 2);
-				ft_putstr_fd("(wanted '", 2);
-				ft_putstr_fd(delimeter, 2);
-				ft_putstr_fd("')\n", 2);
-				break ;
-			}
-			if (ft_strcmp(line, delimeter) == 0)
-			{
-				free(line);
-				break ;
-			}
-			free(line);
-		}
-		ft_free_eve(step, env);
-		exit(0);
-	}
+		heredoc_to_skip_child(delimeter, env, step);
 	else
 	{
 		waitpid(pid, &status, 0);
@@ -104,11 +113,7 @@ int	last_heredoc(t_token *rd, char **env, t_step *step)
 			line = readline("> ");
 			if (!line)
 			{
-				ft_putstr_fd("minishell: warning: ", 2);
-				ft_putstr_fd("here-document delimited by end-of-file ", 2);
-				ft_putstr_fd("(wanted '", 2);
-				ft_putstr_fd(rd->s, 2);
-				ft_putstr_fd("')\n", 2);
+				ft_put_warning_eof(rd->s);
 				break ;
 			}
 			if (ft_strcmp(line, rd->s) == 0)

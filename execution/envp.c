@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/06/19 17:04:27 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/23 00:00:13 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,11 @@ int	ft_setenv(char ***env, char *k, char *n_value)
 	{
 		if (ft_strncmp((*env)[i], k, len) == 0)
 		{
-			/* fprintf(stderr, "k is %s, len is %ld, env is %s\n", k, len,
-				(*env)[i]); */
 			if (ft_strlen((*env)[i]) == len || (ft_strlen((*env)[i]) > len
 					&& (*env)[i][len] == '='))
 			{
 				if (strchr(k, '='))
 				{
-					fprintf(stderr, "I am freeing old entry\n");
 					ft_free_str(&(*env)[i]);
 					(*env)[i] = new_entry;
 					return (0);

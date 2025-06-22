@@ -30,6 +30,20 @@ int	is_number(char *str)
 	return (1);
 }
 
+void	define_limit(int *sign, unsigned long long *limit, const char *s)
+{
+	if (*s == '-' || *s == '+')
+	{
+		if (*s == '-')
+			*sign = -1;
+		s++;
+	}
+	if (*sign == 1)
+		*limit = (unsigned long long)LLONG_MAX;
+	else
+		*limit = (unsigned long long)LLONG_MAX + 1;
+}
+
 int	ft_is_overflow(const char *s, long long *num)
 {
 	int					sign;
@@ -39,16 +53,7 @@ int	ft_is_overflow(const char *s, long long *num)
 
 	sign = 1;
 	result = 0;
-	if (*s == '-' || *s == '+')
-	{
-		if (*s == '-')
-			sign = -1;
-		s++;
-	}
-	if (sign == 1)
-		limit = (unsigned long long)LLONG_MAX;
-	else
-		limit = (unsigned long long)LLONG_MAX + 1;
+	define_limit(&sign, &limit, s);
 	while (*s >= '0' && *s <= '9')
 	{
 		digit = *s - '0';
