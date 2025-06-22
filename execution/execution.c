@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/20 17:22:03 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/22 23:01:47 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ int	execute_single_cmd(t_step *step, char ***env)
 		if (pid == -1)
 			return (-1);
 		g_sigint = SIGINT_CHILD;
-		// fprintf(stderr, "I set sigint to %d\n", sigint);
 		if (pid == 0)
 			exec_single_cmd_child(step, env);
 		else

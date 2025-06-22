@@ -6,13 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/20 16:51:44 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/22 23:26:01 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern volatile sig_atomic_t	sigint;
+extern volatile sig_atomic_t	g_sigint;
 
 int	exit_status(int new_s, bool add)
 {
@@ -30,6 +30,14 @@ int	shell_execution(t_step **step, char ***env)
 	status = 0;
 	initialize_hd_fd(*step);
 	handle_heredoc(*step, *env);
+	status = exit_status(0, false);
+	if (status == 130 && g_sigint == SIGINT_HEREDOC_RECEIVED)
+	{
+		close_hd(*step);
+		st_lstclear(step);
+		g_sigint = SIGINT_NONE;
+		return (130);
+	}
 	if ((*step)->pipe)
 		status = create_processes(*step, *env);
 	else if (!((*step)->pipe))

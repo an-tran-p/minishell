@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/20 17:10:28 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/22 23:02:15 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # define SIGINT_READLINE 1
 # define SIGINT_CHILD 2
 # define SIGINT_HEREDOC 3
+# define SIGINT_HEREDOC_RECEIVED 4
 
 typedef struct s_env
 {
@@ -117,7 +118,7 @@ void				close_hd(t_step *step);
 int					ft_printf(const char *str, ...);
 
 void				sigint_parent_handler(int sig);
-/* void				handling_sigint_heredoc(int sig); */
+/* void				sigint_heredoc_handler(int sig); */
 
 int					exit_status(int new_s, bool add);
 
