@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/20 17:22:32 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/22 23:37:21 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,11 +117,11 @@ int	create_processes(t_step *step, char **env)
 		if (pid == 0)
 			execute_child_process(fds, prev_fd, st, step, env);
 		parent_process(&prev_fd, fds, st, pid);
-		g_sigint = SIGINT_NONE;
 		st = st->next;
 		i++;
 	}
 	if (pid == -1)
 		parent_process(&prev_fd, fds, st, pid);
+	// g_sigint = SIGINT_NONE;
 	return (process_wait(pid, i));
 }
