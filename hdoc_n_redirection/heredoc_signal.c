@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/23 00:06:01 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/23 18:37:57 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,26 @@ void	ft_put_warning_eof(char *s)
 	ft_putstr_fd("')\n", 2);
 }
 
+void	sigint_heredoc_clean(char **env, t_step *step, char **line)
+{
+	ft_free_str(line);
+	close_hd(step);
+	ft_free_eve(step, env);
+	exit(130);
+}
+
 void	heredoc_to_skip_child(char *delimeter, char **env, t_step *step)
 {
 	char	*line;
 
-	signal(SIGINT, SIG_DFL);
+	signal(SIGINT, sigint_heredoc_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
+		rl_event_hook = sig_hook;
 		line = readline("> ");
+		if (g_sigint == SIGINT_HEREDOC_RECEIVED)
+			sigint_heredoc_clean(env, step, &line);
 		if (!line)
 		{
 			ft_put_warning_eof(delimeter);
@@ -80,7 +91,7 @@ int	heredoc_to_skip(char *delimeter, char **env, t_step *step)
 	else
 	{
 		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		if (WEXITSTATUS(status) == 130)
 		{
 			g_sigint = SIGINT_HEREDOC_RECEIVED;
 			exit_status(130, true);
@@ -90,10 +101,49 @@ int	heredoc_to_skip(char *delimeter, char **env, t_step *step)
 	return (-2);
 }
 
+void	last_heredoc_child(int *fd, t_token *rd, char **env, t_step *step)
+{
+	char	*line;
+
+	signal(SIGINT, sigint_heredoc_handler);
+	signal(SIGQUIT, SIG_IGN);
+	close(fd[0]);
+	while (1)
+	{
+		rl_event_hook = sig_hook;
+		line = readline("> ");
+		if (g_sigint == SIGINT_HEREDOC_RECEIVED)
+		{
+			close(fd[1]);
+			sigint_heredoc_clean(env, step, &line);
+		}
+		if (!line)
+		{
+			ft_put_warning_eof(rd->s);
+			break ;
+		}
+		if (ft_strcmp(line, rd->s) == 0)
+		{
+			ft_free_str(&line);
+			break ;
+		}
+		if (rd->type == RD_HEREDOC)
+		{
+			if (heredoc_expand(&line, env))
+				break ;
+		}
+		write(fd[1], line, ft_strlen(line));
+		write(fd[1], "\n", 1);
+		free(line);
+	}
+	close(fd[1]);
+	ft_free_eve(step, env);
+	exit(0);
+}
+
 int	last_heredoc(t_token *rd, char **env, t_step *step)
 {
 	int		fd[2];
-	char	*line;
 	pid_t	pid;
 	int		status;
 
@@ -104,41 +154,12 @@ int	last_heredoc(t_token *rd, char **env, t_step *step)
 		return (-1);
 	g_sigint = SIGINT_HEREDOC;
 	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_IGN);
-		close(fd[0]);
-		while (1)
-		{
-			line = readline("> ");
-			if (!line)
-			{
-				ft_put_warning_eof(rd->s);
-				break ;
-			}
-			if (ft_strcmp(line, rd->s) == 0)
-			{
-				ft_free_str(&line);
-				break ;
-			}
-			if (rd->type == RD_HEREDOC)
-			{
-				if (heredoc_expand(&line, env))
-					break ;
-			}
-			write(fd[1], line, ft_strlen(line));
-			write(fd[1], "\n", 1);
-			free(line);
-		}
-		close(fd[1]);
-		ft_free_eve(step, env);
-		exit(0);
-	}
+		last_heredoc_child(fd, rd, env, step);
 	else
 	{
 		close(fd[1]);
 		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		if (WEXITSTATUS(status) == 130)
 		{
 			close(fd[0]);
 			g_sigint = SIGINT_HEREDOC_RECEIVED;
@@ -152,13 +173,11 @@ int	last_heredoc(t_token *rd, char **env, t_step *step)
 int	heredoc_in_step(t_token *redirection, char **env, t_step *step)
 {
 	int		fd_in;
-	int		fd_skip;
 	t_token	*rd;
 	int		hd_num;
 
 	rd = redirection;
 	hd_num = count_hdoc(redirection);
-	fd_skip = -2;
 	fd_in = -2;
 	while (rd)
 	{
@@ -167,16 +186,11 @@ int	heredoc_in_step(t_token *redirection, char **env, t_step *step)
 			hd_num--;
 			if (hd_num > 0)
 			{
-				fd_skip = heredoc_to_skip(rd->s, env, step);
-				if (fd_skip == -1)
+				if (heredoc_to_skip(rd->s, env, step) == -1)
 					return (-1);
 			}
 			else if (hd_num == 0)
-			{
-				fd_in = last_heredoc(rd, env, step);
-				fprintf(stderr, "fd of this heredoc is %d\n", fd_in);
-				return (fd_in);
-			}
+				return (last_heredoc(rd, env, step));
 		}
 		rd = rd->next;
 	}
@@ -195,13 +209,7 @@ void	handle_heredoc(t_step *step, char **env)
 		st->hd_fd = heredoc_in_step(st->rd, env, step);
 		if (st->hd_fd == -1)
 		{
-			st = step;
-			while (st)
-			{
-				if (st->hd_fd >= 0)
-					close(st->hd_fd);
-				st = st->next;
-			}
+			close_hd(step);
 			return ;
 		}
 		st = st->next;

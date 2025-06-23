@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:30:53 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/20 16:05:47 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/23 15:08:13 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,4 @@ void	token_get_env(char **str, int *i, t_env *data, char **env)
 	free(data->var);
 	data->tmp = (*str) + (*i) + data->j + 1;
 	data->len_tmp = ft_strlen(data->tmp);
-/*
-	if (!data->expand || !data->expand[0])
-		ft_memcpy((*str) + (*i), data->tmp, data->len_tmp + 1);
-*/
 }

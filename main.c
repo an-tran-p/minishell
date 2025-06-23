@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/22 23:26:01 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/23 20:56:01 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,16 @@ int	shell_execution(t_step **step, char ***env)
 	return (status);
 }
 
-void	minishell(int status, char *line, t_step *step, char **envp)
+void	minishell(int status, char *line, t_step *step, char **env)
 {
-	char	**env;
-
-	env = copy_env(envp);
-	if (!env)
-		exit(EXIT_FAILURE);
 	while (1)
 	{
 		line = readline("minishell% ");
 		if (!line)
+		{
+			ft_printf("exit\n");
 			break ;
+		}
 		if (line[0])
 		{
 			add_history(line);
@@ -79,13 +77,17 @@ int	main(int argc, char **argv, char **envp)
 	int		status;
 	char	*line;
 	t_step	*step;
+	char	**env;
 
 	(void)argc;
 	(void)argv;
 	signal(SIGINT, sigint_parent_handler);
 	signal(SIGQUIT, SIG_IGN);
+	env = copy_env(envp);
+	if (!env)
+		return (EXIT_FAILURE);
 	step = NULL;
 	line = NULL;
 	status = 0;
-	minishell(status, line, step, envp);
+	minishell(status, line, step, env);
 }

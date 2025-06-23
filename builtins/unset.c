@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/19 17:10:55 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/23 20:31:46 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,20 @@ int	remove_env_key(char ***env, char *key)
 	k_len = ft_strlen(key);
 	while ((*env)[i])
 	{
-		if (ft_strlen((*env)[i]) == k_len || (ft_strlen((*env)[i]) > k_len
-				&& (*env)[i][k_len] == '='))
+		if (ft_strncmp((*env)[i], key, k_len) == 0)
 		{
-			ft_free_str(&(*env)[i]);
-			while ((*env)[i + 1])
+			if (ft_strlen((*env)[i]) == k_len || (ft_strlen((*env)[i]) > k_len
+					&& (*env)[i][k_len] == '='))
 			{
-				(*env)[i] = (*env)[i + 1];
-				i++;
+				ft_free_str(&(*env)[i]);
+				while ((*env)[i + 1])
+				{
+					(*env)[i] = (*env)[i + 1];
+					i++;
+				}
+				(*env)[i] = NULL;
+				return (0);
 			}
-			(*env)[i] = NULL;
-			return (0);
 		}
 		i++;
 	}

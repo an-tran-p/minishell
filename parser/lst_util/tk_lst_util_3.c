@@ -6,26 +6,9 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 14:01:41 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/12 15:16:19 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/23 17:09:13 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-/*
-	switch (type)
-	{
-		case WORD_VAR: return "WORD_VAR";
-		case WORD: return "WORD";
-		case INFILE: return "INFILE";
-		case OUTFILE: return "OUTFILE";
-		case CMD: return "CMD";
-		case ARG: return "ARG";
-		case RD_LEFT: return "RD_LEFT";
-		case RD_HEREDOC: return "RD_HEREDOC";
-		case RD_RIGHT: return "RD_RIGHT";
-		case RD_APPEND: return "RD_APPEND";
-		case PIPE: return "PIPE";
-	}
-*/
 
 #include "../tokenizer.h"
 

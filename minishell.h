@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/22 23:02:15 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/23 17:51:55 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,8 @@ void				close_hd(t_step *step);
 int					ft_printf(const char *str, ...);
 
 void				sigint_parent_handler(int sig);
-/* void				sigint_heredoc_handler(int sig); */
+void				sigint_heredoc_handler(int sig);
+int					sig_hook(void);
 
 int					exit_status(int new_s, bool add);
 

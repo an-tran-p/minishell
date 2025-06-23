@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 13:34:32 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/04 17:02:10 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/23 17:04:33 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_token	*tk_lstnew(t_etype type, char *s)
 	new_node->s = s;
 	return (new_node);
 }
-
+/*
 void	tk_lstadd_front(t_token **head, t_token *new_node)
 {
 	if (new_node)
@@ -33,7 +33,6 @@ void	tk_lstadd_front(t_token **head, t_token *new_node)
 	}
 }
 
-/*
 int	tk_lstsize(t_token *head)
 {
 	int	i;

@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/19 20:33:47 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/23 17:12:24 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,66 +114,3 @@ t_token	*chk_tokens_loop(t_token **head, int *exit_no, char **env)
 	}
 	return (tmp);
 }
-
-/*
-static t_token	*chk_tokens_loop(t_token **head, int *exit_no, char **env)
-{
-	t_token	*tmp;
-
-	tmp = *head;
-	while (tmp && tmp->next)
-	{
-		if (tmp->type == WORD_F)
-		{
-			*exit_no = token_flag(head, tmp, 0, env);
-			if (!(*exit_no) && tmp->type != DEL)
-				tmp->type = WORD;
-		}
-		else if (type_isrd(tmp->type))
-		{
-			*exit_no = chk_rd_err(head, tmp, env);
-			if (*exit_no)
-				return (NULL);
-			free(tmp->s);
-			tmp->s = tmp->next->s;
-			tmp->next->s = NULL;
-			tmp->next->type = DEL;
-		}
-		else if (tmp->type == PIPE && tmp->next->type == PIPE)
-		{
-			*exit_no = token_synerr(head, tmp->s);
-			return (NULL);
-		}
-		tmp = tmp->next;
-	}
-	return (tmp);
-}
-
-int	chk_tokens(t_token **head, char **env)
-{
-	int		exit_no;
-	t_token	*tmp;
-
-	exit_no = 0;
-	tmp = *head;
-	if (tmp->type == PIPE)
-	{
-		exit_no = token_synerr(head, "|");
-		return (exit_no);
-	}
-	tmp = chk_tokens_loop(head, &exit_no, env);
-	if (!tmp)
-		return (exit_no);
-	if (tmp && (tmp->type == PIPE || type_isrd(tmp->type)))
-	{
-		exit_no = token_synerr(head, "newline");
-	}
-	else if (tmp && tmp->type == WORD_F)
-	{
-		token_flag(head, tmp, 0, env);
-		if (tmp->type != DEL)
-			tmp->type = WORD;
-	}
-	return (exit_no);
-}
-*/

@@ -6,7 +6,7 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/19 20:31:07 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/23 16:47:44 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	init_t_line(t_line *line, char *s)
 	line->tmp = s;
 }
 
-int	tokenizer(t_token **head, char *s)
+static int	tokenizer(t_token **head, char *s)
 {
 	t_line	line;
 
@@ -58,7 +58,7 @@ int	tokenizer(t_token **head, char *s)
 	return (0);
 }
 
-int	chk_tokens(t_token **head, char **env)
+static int	chk_tokens(t_token **head, char **env)
 {
 	int		exit_no;
 	t_token	*tmp;
@@ -105,34 +105,3 @@ st_lstprint(*lst);
 	}
 	return (exit_no);
 }
-
-/*
-int	main(void)
-{
-	int		status;
-	int		len;
-	char	str[] =
-//		"<$A cat >a|cat -e a";
-//		"<<eofi\"\" cat a$A. $A elk | >a grep \"ads\">b | sort output.txt ";
-//		"cat test.txt | grep \"apple $USER $_a\" | sort output.txt ";
-//		" <a echo $USER >b |ca\"t\" 'Hello \"world\"'df|cmd arg$PWD  ";
-		">a $AA e\"c\"h$A |ehcho ihid >a |kl|>bb";
-//		" <Aa \"$A sklsd\" $A $A";
-	char	*line;
-	t_step	*lst;
-
-	lst = NULL;
-	len = ft_strlen(str);
-	line = (char *)ft_calloc(len + 1, sizeof(char));
-	if (!line)
-		exit(1);
-	ft_memcpy(line, str, len);
-	status = parser(line, &lst);
-	if (lst)
-		st_lstprint(lst);
- 	st_lstclear(&lst);
-//	status = parser(line);
-	if (status)
-		printf("exit_no: %d\n", status);
-}
-*/

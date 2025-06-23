@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/18 12:57:07 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/23 20:20:50 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,17 @@ int	token_quote_env(char **str, int *i, char **env)
 	t_env	data;
 
 	token_get_env(str, i, &data, env);
-	if (data.m_err || !data.j || !data.expand || !data.expand[0])
+	if (!data.j)
 		return (data.m_err);
+	if (data.m_err || !data.expand || !data.expand[0])
+	{
+		if (!data.expand || !data.expand[0])
+		{
+			ft_memcpy((*str) + (*i), data.tmp, data.len_tmp + 1);
+			(*i)--;
+		}
+		return (data.m_err);
+	}
 	data.m_err = token_expand_str(str, i, &data);
 	return (data.m_err);
 }
@@ -61,9 +70,11 @@ int	token_flag(t_token **head, t_token *cur, int rd, char **env)
 	while (cur->s[i])
 	{
 		if (cur->s[i] == '\'' || cur->s[i] == '\"')
+		{
 			if (token_quote(&cur->s, &i, 0, env))
 				m_err_exit_token(head);
-		if (cur->s[i] == '$')
+		}
+		else if (cur->s[i] == '$')
 		{
 			err = token_env(&cur, &i, rd, env);
 			if (err == -1)

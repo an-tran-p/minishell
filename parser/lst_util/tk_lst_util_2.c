@@ -6,12 +6,13 @@
 /*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 13:34:32 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/05/30 17:13:52 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/23 17:20:08 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../tokenizer.h"
 
+/*
 void	tk_lstdelone(t_token **token)
 {
 	t_token	*tmp;
@@ -23,6 +24,7 @@ void	tk_lstdelone(t_token **token)
 	free(tmp->s);
 	free(tmp);
 }
+*/
 
 void	tk_lstclear(t_token **head)
 {
