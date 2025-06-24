@@ -54,6 +54,8 @@ int	ft_is_overflow(const char *s, long long *num)
 	sign = 1;
 	result = 0;
 	define_limit(&sign, &limit, s);
+	while (*s >= '+' && *s <= '-')
+		s++;
 	while (*s >= '0' && *s <= '9')
 	{
 		digit = *s - '0';

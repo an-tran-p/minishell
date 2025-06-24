@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/23 20:15:31 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/24 21:18:33 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,6 @@ int	process_wait(pid_t pid, int i)
 void	execute_child_process(int *fds, int prev_fd, t_step *st, t_step *step,
 		char **env)
 {
-	if (st->cmd)
-		fprintf(stderr, "PID: %d executing command: %s\n", getpid(),
-			st->cmd[0]);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (prev_fd != -1 && !have_infile(st->rd) && st->hd_fd < 0)
@@ -124,6 +121,5 @@ int	create_processes(t_step *step, char **env)
 	}
 	if (pid == -1)
 		parent_process(&prev_fd, fds, st, pid);
-	// g_sigint = SIGINT_NONE;
 	return (process_wait(pid, i));
 }

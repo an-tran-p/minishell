@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/23 20:09:44 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/24 17:49:27 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	execute(char **cmd, char **env, t_step *step)
 	{
 		perror("Execution fails");
 		ft_free_eve(step, env);
-		exit(127);
+		exit(126);
 	}
 	free(path);
 }

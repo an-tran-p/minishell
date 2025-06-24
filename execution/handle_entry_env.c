@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   envp.c                                             :+:      :+:    :+:   */
+/*   handle_entry_env.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/06/23 00:00:13 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/24 19:06:08 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,34 +85,6 @@ char	*ft_getenv(char **env, char *key)
 		i++;
 	}
 	return (NULL);
-}
-
-char	**copy_env(char **envp)
-{
-	int		i;
-	char	**env;
-
-	i = 0;
-	if (!envp)
-		return (NULL);
-	while (envp[i])
-		i++;
-	env = malloc(sizeof(char *) * (i + 1));
-	if (!env)
-		return (NULL);
-	i = 0;
-	while (envp[i])
-	{
-		env[i] = ft_strdup(envp[i]);
-		if (!env[i])
-		{
-			ft_free_strarr(env);
-			return (NULL);
-		}
-		i++;
-	}
-	env[i] = NULL;
-	return (env);
 }
 
 char	**realloc_env(char **env, int add)

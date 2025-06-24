@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/23 17:51:55 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/24 21:15:47 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,11 @@ int					ft_setenv(char ***env, char *key, char *n_value);
 char				**realloc_env(char **env, int add);
 
 void				initialize_hd_fd(t_step *step);
+int					count_hdoc(t_token *redirection);
+void				ft_put_warning_eof(char *s);
+void				sigint_heredoc_clean(char **env, t_step *step, char **line);
+int					heredoc_to_skip(char *delimeter, char **env, t_step *step);
+int					last_heredoc(t_token *rd, char **env, t_step *step);
 void				handle_heredoc(t_step *step, char **env);
 void				close_hd(t_step *step);
 void				handle_rd(t_step *st, t_step *step, char **env);

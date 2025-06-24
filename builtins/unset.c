@@ -6,21 +6,17 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/23 20:31:46 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/24 21:09:23 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	remove_env_key(char ***env, char *key)
+int	find_key_to_remove(char ***env, char *key, size_t k_len)
 {
-	int		i;
-	size_t	k_len;
+	int	i;
 
 	i = 0;
-	if (!env || !(*env) || !key)
-		return (0);
-	k_len = ft_strlen(key);
 	while ((*env)[i])
 	{
 		if (ft_strncmp((*env)[i], key, k_len) == 0)
@@ -41,6 +37,18 @@ int	remove_env_key(char ***env, char *key)
 		i++;
 	}
 	return (0);
+}
+
+int	remove_env_key(char ***env, char *key)
+{
+	int		i;
+	size_t	k_len;
+
+	i = 0;
+	if (!env || !(*env) || !key)
+		return (0);
+	k_len = ft_strlen(key);
+	return (find_key_to_remove(env, key, k_len));
 }
 
 int	ft_unset(char **argv, char ***env)
