@@ -6,41 +6,13 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/24 17:49:27 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 14:37:25 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 extern volatile sig_atomic_t	g_sigint;
-
-void	execute(char **cmd, char **env, t_step *step)
-{
-	char	*path;
-
-	if (!cmd || !cmd[0])
-	{
-		ft_free_eve(step, env);
-		exit(0);
-	}
-	if (!access(cmd[0], X_OK))
-		path = cmd[0];
-	else
-		path = find_path(cmd[0], env);
-	if (!path || !path[0])
-	{
-		ft_put_err("command not found", cmd[0], NULL);
-		ft_free_eve(step, env);
-		exit(127);
-	}
-	else if (execve(path, cmd, env) == -1)
-	{
-		perror("Execution fails");
-		ft_free_eve(step, env);
-		exit(126);
-	}
-	free(path);
-}
 
 int	have_infile(t_token *redirection)
 {

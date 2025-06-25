@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/25 13:57:05 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 14:15:47 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <string.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
 # include <unistd.h>
 

@@ -6,7 +6,7 @@
 #    By: atran <atran@student.hive.fi>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/06 17:50:04 by atran             #+#    #+#              #
-#    Updated: 2025/06/24 21:16:23 by atran            ###   ########.fr        #
+#    Updated: 2025/06/25 14:38:21 by atran            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME = minishell
 
 SRCS =  main.c signal.c\
 		execution/env_copy.c execution/exec_pipe.c execution/execution.c \
-		execution/find_path.c execution/free_mem.c execution/handle_entry_env.c\
+		execution/find_path.c execution/free_mem.c execution/handle_entry_env.c \
+		execution/execution_utils.c \
 		builtins/pwd.c builtins/echo.c builtins/cd.c builtins/exit.c \
 		builtins/export.c builtins/env.c builtins/unset.c builtins/builtin_exec.c \
 		hdoc_n_redirection/heredoc.c hdoc_n_redirection/heredoc_utils.c \
