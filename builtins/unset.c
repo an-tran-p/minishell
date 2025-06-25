@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/24 21:09:23 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 11:46:23 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,8 @@ int	find_key_to_remove(char ***env, char *key, size_t k_len)
 
 int	remove_env_key(char ***env, char *key)
 {
-	int		i;
 	size_t	k_len;
 
-	i = 0;
 	if (!env || !(*env) || !key)
 		return (0);
 	k_len = ft_strlen(key);

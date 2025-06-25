@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/24 21:15:47 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 12:59:11 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int					execute_builtin_in_parent(char **argv, char ***env,
 						t_step *step, int pipe_fd);
 int					ft_echo(char **argv);
 int					ft_pwd(char **env);
-int					ft_cd(char **argv, char **env);
+int					ft_cd(char **argv, char ***env);
 int					ft_export(char **argv, char ***env);
 int					ft_env(char **argv, char **env);
 int					check_valid_id(char *entry, char c);

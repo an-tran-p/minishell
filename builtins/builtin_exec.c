@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/19 20:11:33 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 12:59:33 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	execute_builtin_in_child(char **argv, char ***env, t_step *step,
 	if (ft_strncmp(argv[0], "pwd", 4) == 0)
 		status = ft_pwd(*env);
 	if (ft_strncmp(argv[0], "cd", 3) == 0)
-		status = ft_cd(argv, *env);
+		status = ft_cd(argv, env);
 	if (ft_strncmp(argv[0], "export", 7) == 0)
 		status = ft_export(argv, env);
 	if (ft_strncmp(argv[0], "env", 4) == 0)
@@ -58,7 +58,7 @@ int	execute_builtin_in_parent(char **argv, char ***env, t_step *step,
 	if (ft_strncmp(argv[0], "pwd", 4) == 0)
 		status = ft_pwd(*env);
 	if (ft_strncmp(argv[0], "cd", 3) == 0)
-		status = ft_cd(argv, *env);
+		status = ft_cd(argv, env);
 	if (ft_strncmp(argv[0], "export", 7) == 0)
 		status = ft_export(argv, env);
 	if (ft_strncmp(argv[0], "env", 4) == 0)

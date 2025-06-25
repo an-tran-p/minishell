@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/06/24 21:01:07 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 12:41:50 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ char	**copy_env(char **envp)
 	j = 0;
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], "_=", 1) == 0 && !envp[i++])
-			break ;
 		env[j] = ft_strdup(envp[i]);
 		if (!env[j])
 		{

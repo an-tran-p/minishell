@@ -6,30 +6,32 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/24 21:18:55 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 13:06:06 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_cd(char **argv, char **env)
+void	cd_err(void)
+{
+	ft_putstr_fd("cd: error retrieving current directory: getcwd: ", 2);
+	ft_putstr_fd("cannot access parent directories: ", 2);
+	ft_putstr_fd("No such file or directory\n", 2);
+}
+
+char	*get_cd_path(char **argv, char **env)
 {
 	char	*path;
-	char	old_pwd[PATH_MAX];
-	char	cur_pwd[PATH_MAX];
 
-	if (argv[2])
-	{
-		ft_put_err("too many argument", "cd", NULL);
-		return (1);
-	}
+	if (argv[1] && argv[2])
+		return (ft_put_err("too many argument", "cd", NULL), NULL);
 	else if (!argv[1] || (argv[1] && ft_strncmp(argv[1], "~", 2) == 0))
 	{
 		path = ft_getenv(env, "HOME");
 		if (!path)
 		{
 			ft_put_err("HOME not set", "cd", NULL);
-			return (1);
+			return (NULL);
 		}
 	}
 	else if (ft_strncmp(argv[1], "-", 2) == 0)
@@ -38,19 +40,37 @@ int	ft_cd(char **argv, char **env)
 		if (!path)
 		{
 			ft_put_err("OLDPWD not set", "cd", NULL);
-			return (1);
+			return (NULL);
 		}
 	}
 	else
 		path = argv[1];
-	getcwd(old_pwd, PATH_MAX);
+	return (path);
+}
+
+int	ft_cd(char **argv, char ***env)
+{
+	char	*path;
+	char	old[PATH_MAX];
+	char	new[PATH_MAX];
+	char	*old_pwd;
+
+	path = get_cd_path(argv, *env);
+	if (!path)
+		return (1);
+	old_pwd = getcwd(old, PATH_MAX);
 	if (chdir(path) != 0)
 	{
 		ft_put_err(strerror(errno), "cd", path);
 		return (1);
 	}
-	ft_setenv(&env, "OLDPWD=", old_pwd);
-	getcwd(cur_pwd, PATH_MAX);
-	ft_setenv(&env, "PWD=", cur_pwd);
+	path = getcwd(new, PATH_MAX);
+	if (!path && errno == ENOENT)
+	{
+		cd_err();
+		return (1);
+	}
+	ft_setenv(env, "OLDPWD=", old_pwd);
+	ft_setenv(env, "PWD=", path);
 	return (0);
 }

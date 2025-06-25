@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:56:42 by atran             #+#    #+#             */
-/*   Updated: 2025/06/24 19:06:08 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 13:26:17 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,10 @@ char	*get_new_entry(size_t *len, char *k, char *n_value)
 	return (new_entry);
 }
 
-int	ft_setenv(char ***env, char *k, char *n_value)
+int	update_entry(char ***env, char *k, char *new_entry, size_t len)
 {
-	char	*new_entry;
-	int		i;
-	size_t	len;
+	int	i;
 
-	new_entry = get_new_entry(&len, k, n_value);
-	if (!new_entry)
-		return (1);
 	i = 0;
 	while ((*env)[i])
 	{
@@ -50,21 +45,37 @@ int	ft_setenv(char ***env, char *k, char *n_value)
 				{
 					ft_free_str(&(*env)[i]);
 					(*env)[i] = new_entry;
-					return (0);
 				}
-				else
-					return (0);
+				return (1);
 			}
 		}
 		else if (ft_strncmp((*env)[i], k, ft_strchr((*env)[i], '=')
 				- (*env)[i]) == 0 && !ft_strchr(k, '='))
-			return (0);
+			return (1);
 		i++;
 	}
-	*env = realloc_env(*env, 1);
-	if (!(*env))
-		return (ft_free_str(&new_entry), 1);
-	(*env)[i] = new_entry;
+	return (0);
+}
+
+int	ft_setenv(char ***env, char *k, char *n_value)
+{
+	char	*new_entry;
+	int		i;
+	size_t	len;
+
+	new_entry = get_new_entry(&len, k, n_value);
+	if (!new_entry)
+		return (1);
+	if (!update_entry(env, k, new_entry, len))
+	{
+		*env = realloc_env(*env, 1);
+		if (!(*env))
+			return (ft_free_str(&new_entry), 1);
+		i = 0;
+		while ((*env)[i])
+			i++;
+		(*env)[i] = new_entry;
+	}
 	return (0);
 }
 
