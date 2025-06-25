@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   st_step.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/20 16:36:44 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/25 19:00:30 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,10 @@ void	st_step(t_token **head, t_step **lst)
 			ft_putstr_fd("Memory alllocation failed.\n", 2);
 			exit(EXIT_FAILURE);
 		}
-		if (!new_node->rd && !new_node->cmd)
-			free(new_node);
 		else
 			st_lstadd_back(lst, new_node);
 	}
 }
+
+//		if (!new_node->rd && !new_node->cmd)
+//			free(new_node);

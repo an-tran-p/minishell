@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/25 13:06:06 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 18:40:26 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_cd_path(char **argv, char **env)
 	char	*path;
 
 	if (argv[1] && argv[2])
-		return (ft_put_err("too many argument", "cd", NULL), NULL);
+		return (ft_put_err("too many arguments", "cd", NULL), NULL);
 	else if (!argv[1] || (argv[1] && ft_strncmp(argv[1], "~", 2) == 0))
 	{
 		path = ft_getenv(env, "HOME");
