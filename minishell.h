@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/25 14:15:47 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 19:52:07 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,16 @@ typedef struct s_step
 	char			**cmd;
 	struct s_step	*next;
 }					t_step;
+
+typedef struct s_process
+{
+	int				fds[2];
+	int				prev_fd;
+	t_step			*st;
+	t_step			*step;
+	char			**env;
+	pid_t			pid;
+}					t_process;
 
 int					is_builtins(char *argv);
 void				execute_builtin_in_child(char **argv, char ***env,

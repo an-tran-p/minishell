@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/25 18:39:35 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 19:47:47 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,10 @@ int	parser(char *s, t_step **lst, char **env)
 	exit_no = tokenizer(&head, s);
 	if (!head || exit_no)
 		return (exit_no);
-//tk_lstprint(head);
 	exit_no = chk_tokens(&head, env);
 	if (head)
 	{
-//tk_lstprint(head);
 		st_step(&head, lst);
-//st_lstprint(*lst);
 	}
 	return (exit_no);
 }

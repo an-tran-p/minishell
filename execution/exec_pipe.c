@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/24 21:18:33 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 22:38:46 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,34 +37,35 @@ int	process_wait(pid_t pid, int i)
 			return (-1);
 		j++;
 	}
+	g_sigint = SIGINT_NONE;
 	return (f_status);
 }
 
-void	execute_child_process(int *fds, int prev_fd, t_step *st, t_step *step,
-		char **env)
+void	execute_child_process(t_process *pro)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	if (prev_fd != -1 && !have_infile(st->rd) && st->hd_fd < 0)
-		dup2(prev_fd, STDIN_FILENO);
-	if (st->pipe && !have_outfile(st->rd))
-		dup2(fds[1], STDOUT_FILENO);
-	if (prev_fd != -1)
-		close(prev_fd);
-	if (st->pipe)
+	if (pro->prev_fd != -1 && !have_infile(pro->st->rd) && pro->st->hd_fd < 0)
+		dup2(pro->prev_fd, STDIN_FILENO);
+	if (pro->st->pipe && !have_outfile(pro->st->rd))
+		dup2(pro->fds[1], STDOUT_FILENO);
+	if (pro->prev_fd != -1)
+		close(pro->prev_fd);
+	if (pro->st->pipe)
 	{
-		if (!st->cmd || (st->cmd && !is_builtins(st->cmd[0])))
-			close(fds[0]);
-		close(fds[1]);
+		if (!pro->st->cmd || (pro->st->cmd && !is_builtins(pro->st->cmd[0])))
+			close(pro->fds[0]);
+		close(pro->fds[1]);
 	}
-	if (st->rd)
-		handle_rd(st, step, env);
-	close_hd(step);
-	if (st->cmd && is_builtins(st->cmd[0]))
-		execute_builtin_in_child(st->cmd, &env, step, fds[0]);
-	if (st->cmd && !is_builtins(st->cmd[0]))
-		execute(st->cmd, env, step);
-	ft_free_eve(step, env);
+	if (pro->st->rd)
+		handle_rd(pro->st, pro->step, pro->env);
+	close_hd(pro->step);
+	if (pro->st->cmd && is_builtins(pro->st->cmd[0]))
+		execute_builtin_in_child(pro->st->cmd, &pro->env, pro->step,
+			pro->fds[0]);
+	if (pro->st->cmd && !is_builtins(pro->st->cmd[0]))
+		execute(pro->st->cmd, pro->env, pro->step);
+	ft_free_eve(pro->step, pro->env);
 	exit(0);
 }
 
@@ -88,38 +89,42 @@ void	parent_process(int *prev_fd, int fds[2], t_step *st, pid_t pid)
 	}
 }
 
-int	create_processes(t_step *step, char **env)
+void	process_loop(t_process *pro, int *i)
 {
-	int		fds[2];
-	int		prev_fd;
-	pid_t	pid;
-	t_step	*st;
-	int		i;
-
-	i = 0;
-	st = step;
-	prev_fd = -1;
-	while (st)
+	while (pro->st)
 	{
-		if (st->pipe)
+		if (pro->st->pipe)
 		{
-			if (pipe(fds) == -1)
+			if (pipe(pro->fds) == -1)
 			{
-				pid = -1;
+				pro->pid = -1;
 				break ;
 			}
 		}
-		pid = fork();
-		if (pid == -1)
+		pro->pid = fork();
+		if (pro->pid == -1)
 			break ;
 		g_sigint = SIGINT_CHILD;
-		if (pid == 0)
-			execute_child_process(fds, prev_fd, st, step, env);
-		parent_process(&prev_fd, fds, st, pid);
-		st = st->next;
-		i++;
+		if (pro->pid == 0)
+			execute_child_process(pro);
+		parent_process(&pro->prev_fd, pro->fds, pro->st, pro->pid);
+		pro->st = pro->st->next;
+		(*i)++;
 	}
-	if (pid == -1)
-		parent_process(&prev_fd, fds, st, pid);
-	return (process_wait(pid, i));
+}
+
+int	create_processes(t_step *step, char **env)
+{
+	t_process	pro;
+	int			i;
+
+	pro.prev_fd = -1;
+	pro.st = step;
+	pro.step = step;
+	pro.env = env;
+	i = 0;
+	process_loop(&pro, &i);
+	if (pro.pid == -1)
+		parent_process(&pro.prev_fd, pro.fds, pro.st, pro.pid);
+	return (process_wait(pro.pid, i));
 }

@@ -40,6 +40,7 @@ void	handle_infile(t_token *rd, t_step *st, t_step *step, char **env)
 	if (fd_in == -1)
 	{
 		ft_put_err(strerror(errno), rd->s, NULL);
+		close_hd(step);
 		ft_free_eve(step, env);
 		exit(1);
 	}
@@ -60,6 +61,7 @@ void	handle_outfile(t_token *rd, t_step *st, t_step *step, char **env)
 	if (fd_out == -1)
 	{
 		ft_put_err(strerror(errno), rd->s, NULL);
+		close_hd(step);
 		ft_free_eve(step, env);
 		exit(1);
 	}

@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:06:25 by atran             #+#    #+#             */
-/*   Updated: 2025/06/25 13:14:40 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 22:58:16 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	heredoc_to_skip_child(char *delimeter, char **env, t_step *step)
 		}
 		free(line);
 	}
+	close_hd(step);
 	ft_free_eve(step, env);
 	exit(0);
 }
@@ -101,6 +102,7 @@ void	last_heredoc_child(int *fd, t_token *rd, char **env, t_step *step)
 	close(fd[0]);
 	readline_heredoc(fd, rd, env, step);
 	close(fd[1]);
+	close_hd(step);
 	ft_free_eve(step, env);
 	exit(0);
 }

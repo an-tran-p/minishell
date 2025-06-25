@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/19 17:53:07 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/25 22:48:46 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,23 @@ int	ft_echo(char **argv)
 	int	i;
 	int	n;
 
-	i = 0;
+	i = 1;
 	n = 0;
-	if (argv[1] && ft_strncmp(argv[1], "-n", 2) == 0)
+	while (argv[i])
 	{
-		if (!check_not_n(argv[1]))
-		{
+		if (argv[i] && ft_strncmp(argv[i], "-n", 2) == 0
+			&& !check_not_n(argv[i]))
 			n = 1;
-			i = 1;
-		}
+		else
+			break ;
+		i++;
 	}
-	while (argv[++i])
+	while (argv[i])
 	{
 		ft_printf("%s", argv[i]);
 		if (argv[i + 1])
 			ft_printf(" ");
+		i++;
 	}
 	if (n == 0)
 		ft_printf("\n");

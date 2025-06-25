@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/23 20:20:50 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/23 15:35:03 by ji-hong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	token_quote_env(char **str, int *i, char **env)
 		return (data.m_err);
 	if (data.m_err || !data.expand || !data.expand[0])
 	{
-		if (!data.expand || !data.expand[0])
+		if (!data.expand ||!data.expand[0])
 		{
 			ft_memcpy((*str) + (*i), data.tmp, data.len_tmp + 1);
 			(*i)--;
