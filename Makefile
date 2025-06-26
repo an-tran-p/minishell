@@ -6,7 +6,7 @@
 #    By: atran <atran@student.hive.fi>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/06 17:50:04 by atran             #+#    #+#              #
-#    Updated: 2025/06/25 14:38:21 by atran            ###   ########.fr        #
+#    Updated: 2025/06/26 11:13:52 by atran            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,13 @@ SRCS =  main.c signal.c\
 		hdoc_n_redirection/heredoc.c hdoc_n_redirection/heredoc_utils.c \
 		hdoc_n_redirection/multi_heredoc.c hdoc_n_redirection/redirection.c \
 		hdoc_n_redirection/heredoc_expand.c hdoc_n_redirection/open_n_close_hd.c\
+		hdoc_n_redirection/redirection_parent.c \
 		parser/tokenizer.c parser/tokenizer_handle.c parser/tokenizer_util.c \
 		parser/parser_err.c parser/parser_synerr.c parser/token_err_chk.c \
 		parser/token_flag.c parser/token_env_expansion.c\
 		parser/token_env.c parser/token_get_env.c parser/token_env_space.c \
 		parser/st_step.c parser/st_lstnew.c \
 		parser/lst_util/tk_lst_util_1.c parser/lst_util/tk_lst_util_2.c \
-		parser/lst_util/tk_lst_util_3.c
 
 OBJS = $(SRCS:%.c=%.o)
 

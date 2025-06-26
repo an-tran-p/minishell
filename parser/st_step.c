@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:25:02 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/25 19:00:30 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/26 11:11:53 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,34 +41,10 @@ void	st_lstclear(t_step **lst)
 		while (tmp->cmd && tmp->cmd[i])
 		{
 			free(tmp->cmd[i]);
-			i ++;
+			i++;
 		}
 		free(tmp->cmd);
 		free(tmp);
-	}
-}
-
-void	st_lstprint(t_step *lst)
-{
-	int	i;
-
-	printf("------------------\n");
-	while (lst)
-	{
-		printf("pipe: %d\n", lst->pipe);
-		tk_lstprint(lst->rd);
-		i = 0;
-		if (!lst->cmd)
-			printf("No cmd exists");
-		while (lst->cmd && lst->cmd[i])
-		{
-			printf("\x1B[31m""%s""\x1B[0m", lst->cmd[i]);
-			if (lst->cmd[i + 1])
-				printf(" - ");
-			i ++;
-		}
-		printf("\n------------------\n");
-		lst = lst->next;
 	}
 }
 
@@ -90,6 +66,3 @@ void	st_step(t_token **head, t_step **lst)
 			st_lstadd_back(lst, new_node);
 	}
 }
-
-//		if (!new_node->rd && !new_node->cmd)
-//			free(new_node);

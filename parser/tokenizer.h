@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ji-hong <ji-hong@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:29:22 by ji-hong           #+#    #+#             */
-/*   Updated: 2025/06/23 17:20:48 by ji-hong          ###   ########.fr       */
+/*   Updated: 2025/06/26 11:13:20 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,6 @@ void	tk_lstadd_back(t_token **head, t_token *new_node);
 void	tk_lstclear(t_token **head);
 void	tk_appendlst(t_token **head, t_etype type, char *s);
 int		tk_appendfront(t_token **cur, char *s);
-
-char	*get_tk_name(t_etype type);
-void	tk_lstprint(t_token *head);
 
 t_token	*chk_tokens_loop(t_token **head, int *exit_no, char **env);
 

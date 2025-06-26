@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:45:16 by atran             #+#    #+#             */
-/*   Updated: 2025/06/25 19:52:07 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/26 11:13:38 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ int					last_heredoc(t_token *rd, char **env, t_step *step);
 void				handle_heredoc(t_step *step, char **env);
 void				close_hd(t_step *step);
 void				handle_rd(t_step *st, t_step *step, char **env);
+int					handle_rd_parent(t_step *step);
 
 int					have_infile(t_token *redirection);
 int					have_outfile(t_token *redirection);
@@ -146,7 +147,6 @@ int					heredoc_expand(char **s, char **env);
 
 int					parser(char *s, t_step **lst, char **env);
 void				st_step(t_token **head, t_step **lst);
-void				st_lstprint(t_step *lst);
 void				st_lstclear(t_step **lst);
 
 #endif

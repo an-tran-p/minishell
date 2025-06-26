@@ -6,7 +6,7 @@
 /*   By: atran <atran@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:17:21 by atran             #+#    #+#             */
-/*   Updated: 2025/06/25 11:46:23 by atran            ###   ########.fr       */
+/*   Updated: 2025/06/26 11:15:38 by atran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	ft_unset(char **argv, char ***env)
 	{
 		if (check_valid_id(argv[i], 'u'))
 			return (0);
-		if (strchr(argv[i], '='))
+		if (ft_strchr(argv[i], '='))
 			return (0);
 		else
 			exit = remove_env_key(env, argv[i]);
